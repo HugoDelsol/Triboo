@@ -1,0 +1,33 @@
+.summary-pill {
+  flex: 1;
+  text-align: center;
+  padding: 14px 4px;
+  position: relative;
+}
+
+.summary-pill .count {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1;
+}
+.summary-pill .count.late { color: var(--urgent); }
+.summary-pill .count.today { color: var(--gold); }
+.summary-pill .count.week { color: var(--faible); }
+
+.summary-pill .label {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
+
+.summary-pill + .summary-pill::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--line);
+}

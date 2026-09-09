@@ -1,0 +1,38 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #121110;
+  --card: #1B1A18;
+  --line: rgba(255, 255, 255, 0.07);
+  --ink: #F1EFEA;
+  --ink-soft: #9C978E;
+  --ink-faint: #625E57;
+  --gold: #E8B23D;
+  --urgent: #E85D4A;
+  --important: #E8B23D;
+  --faible: #6FA890;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: var(--bg);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}

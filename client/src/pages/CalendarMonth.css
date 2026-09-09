@@ -1,0 +1,78 @@
+/* src/pages/CalendarMonth.css */
+
+.month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 2px 20px;
+}
+
+.month-nav {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.month-title {
+    padding: 0;
+}
+
+.month-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 22px;
+    text-transform: capitalize;
+    color: var(--ink);
+    padding: 2px 2px 20px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    font: inherit;
+    outline: none;
+}
+
+.calendar-day.outside {
+    opacity: 0.3;
+}
+
+.calendar-day.today {
+    border-color: var(--gold);
+}
+
+.calendar-day .day-number {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.calendar-day .day-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+}

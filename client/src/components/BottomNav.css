@@ -1,0 +1,29 @@
+nav {
+    flex-shrink: 0;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+}
+
+.nav-inner {
+    display: flex;
+    justify-content: space-around;
+    padding: 13px 6px max(13px, env(safe-area-inset-bottom));
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: var(--ink-faint);
+    text-decoration: none;
+}
+
+.nav-item span {
+    font-size: 9.5px;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: var(--gold);
+}

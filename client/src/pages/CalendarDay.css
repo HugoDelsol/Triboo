@@ -1,0 +1,32 @@
+/* src/pages/CalendarDay.css */
+
+.back-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-bottom: 18px;
+}
+
+.day-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 24px;
+    text-transform: capitalize;
+    color: var(--ink);
+    margin-bottom: 22px;
+}
+
+.empty-state {
+    color: var(--ink-soft);
+    font-size: 14px;
+    text-align: center;
+    padding: 40px 0;
+}

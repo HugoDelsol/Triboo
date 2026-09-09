@@ -1,0 +1,32 @@
+/* src/components/CreateSheet.css */
+
+.create-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    border-radius: 20px 20px 0 0;
+    padding: 12px 12px max(20px, env(safe-area-inset-bottom));
+    z-index: 11;
+}
+
+.create-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 16px 8px;
+    cursor: pointer;
+}
+
+.create-option:last-child {
+    border-bottom: none;
+}

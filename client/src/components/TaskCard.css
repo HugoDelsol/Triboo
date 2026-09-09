@@ -1,0 +1,52 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 15px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 8px;
+}
+.card.p-urgent { border-left-color: var(--urgent); }
+.card.p-important { border-left-color: var(--important); }
+.card.p-faible { border-left-color: var(--faible); }
+
+.card .body { flex: 1; min-width: 0; }
+
+.card .title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card .meta { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+
+.card .tag {
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-soft);
+}
+.card .tag .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+.card .time-tag { font-size: 11.5px; color: var(--ink-faint); font-weight: 500; }
+
+.card .check {
+  width: 21px; height: 21px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  flex-shrink: 0;
+}
+
+.card .overdue-tag {
+  font-size: 11px;
+  color: var(--urgent);
+  font-weight: 600;
+}

@@ -1,0 +1,101 @@
+/* src/pages/ListDetail.css */
+
+.list-detail-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 20px;
+}
+
+.list-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 14px;
+}
+
+.item-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.item-check.checked {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.item-check.checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 9px;
+    border-right: 2px solid var(--bg);
+    border-bottom: 2px solid var(--bg);
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+
+.item-label {
+    flex: 1;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.item-label.checked {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+}
+
+.item-delete {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.add-item-form {
+    margin-top: 16px;
+}
+
+.add-item-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 15px;
+    font-size: 14px;
+    color: var(--ink);
+    font-family: inherit;
+}
+
+.add-item-input::placeholder {
+    color: var(--ink-faint);
+}
+
+.add-item-input:focus {
+    outline: none;
+    border-color: var(--gold);
+}

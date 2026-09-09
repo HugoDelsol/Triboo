@@ -1,0 +1,19 @@
+/* src/components/FloatingActionButton.css */
+
+.fab {
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(232, 178, 61, 0.3);
+    z-index: 5;
+}
