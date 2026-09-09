@@ -1,2 +1,4 @@
 .env
 .yml
+client/.env
+server/.env
