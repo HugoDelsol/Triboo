@@ -1,0 +1,146 @@
+erDiagram
+    HOUSEHOLD ||--o{ PROFILES : "contient"
+    PROFILES ||--o{ PUSH_SUBSCRIPTIONS : "possède"
+    HOUSEHOLD ||--o{ CATEGORIES : "possède"
+    HOUSEHOLD ||--o{ TASKS : "possède"
+    HOUSEHOLD ||--o{ RECURRING_TASK_TEMPLATES : "possède"
+    HOUSEHOLD ||--o{ LISTS : "possède"
+    CATEGORIES ||--o{ TASKS : "classe"
+    CATEGORIES ||--o{ LISTS : "classe"
+    RECURRING_TASK_TEMPLATES ||--o{ TASKS : "génère"
+    PROFILES ||--o{ TASKS : "crée"
+    PROFILES ||--o{ RECURRING_TASK_TEMPLATES : "crée"
+    TASKS ||--o{ TASK_ASSIGNEES : "a"
+    PROFILES ||--o{ TASK_ASSIGNEES : "est assigné à"
+    TASKS ||--o{ REMINDERS : "déclenche"
+    PROFILES ||--o{ REMINDERS : "reçoit"
+    TASKS ||--o{ TASK_ATTACHMENTS : "a"
+    TASKS ||--o{ ACTIVITY_LOG : "génère"
+    PROFILES ||--o{ ACTIVITY_LOG : "réalise"
+    PROFILES ||--o{ LISTS : "crée"
+    LISTS ||--o{ LIST_ITEMS : "contient"
+    HOUSEHOLD ||--o{ EXPENSES : "possède"
+    CATEGORIES ||--o{ EXPENSES : "classe"
+    PROFILES ||--o{ EXPENSES : "paie"
+
+    HOUSEHOLD {
+        int id PK
+        string password_hash
+        datetime created_at
+    }
+
+    PROFILES {
+        int id PK
+        int household_id FK
+        string name
+        string avatar_url
+    }
+
+    PUSH_SUBSCRIPTIONS {
+        int id PK
+        int profile_id FK
+        string endpoint
+        string keys_p256dh
+        string keys_auth
+        datetime created_at
+    }
+
+    CATEGORIES {
+        int id PK
+        int household_id FK
+        string name
+        string color
+    }
+
+    RECURRING_TASK_TEMPLATES {
+        int id PK
+        int household_id FK
+        int category_id FK
+        int created_by_profile_id FK
+        string title
+        string description
+        string recurrence_type "daily / weekly / monthly / yearly"
+        int recurrence_interval
+        int recurrence_day
+        json reminder_offsets
+        datetime created_at
+    }
+
+    TASKS {
+        int id PK
+        int household_id FK
+        int category_id FK "nullable"
+        int template_id FK "nullable"
+        string period_key "nullable, ex 2026-04"
+        int created_by_profile_id FK
+        string type "task / memo / appointment"
+        string title
+        string description
+        date due_date "nullable si memo"
+        time due_time "nullable, rendez-vous uniquement"
+        string location "nullable, rendez-vous uniquement"
+        json reminder_offsets "nullable si memo"
+        string status "pending / done"
+        string priority "urgent / important / faible"
+        bool overdue_notified
+        datetime created_at
+    }
+
+    TASK_ASSIGNEES {
+        int id PK
+        int task_id FK
+        int profile_id FK
+        string role "owner / viewer / notified"
+    }
+
+    REMINDERS {
+        int id PK
+        int task_id FK
+        int profile_id FK
+        datetime scheduled_at
+        datetime sent_at "nullable"
+        string status "pending / sent / failed"
+    }
+
+    TASK_ATTACHMENTS {
+        int id PK
+        int task_id FK
+        string file_url
+        datetime uploaded_at
+    }
+
+    ACTIVITY_LOG {
+        int id PK
+        int task_id FK
+        int profile_id FK
+        string action "created / updated / done / undone"
+        datetime created_at
+    }
+
+    LISTS {
+        int id PK
+        int household_id FK
+        int category_id FK "nullable"
+        int created_by_profile_id FK
+        string title
+        datetime created_at
+    }
+
+    LIST_ITEMS {
+        int id PK
+        int list_id FK
+        string label
+        bool is_checked
+        datetime created_at
+    }
+
+    EXPENSES {
+        int id PK
+        int household_id FK
+        int category_id FK "nullable"
+        int paid_by_profile_id FK
+        decimal amount
+        string description
+        date date
+        datetime created_at
+    }
