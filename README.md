@@ -42,10 +42,12 @@ Entre les échéances administratives récurrentes (déclaration nounou, assuran
 
 ## Structure du projet
 
+```
 Triboo/
 ├── docker-compose.yml
-├── server/ # API Express, jobs planifiés
-└── client/ # Frontend Vite + React (PWA)
+├── server/          # API Express, jobs planifiés
+└── client/          # Frontend Vite + React (PWA)
+```
 
 
 ## Lancer le projet en local
