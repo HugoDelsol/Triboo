@@ -9,24 +9,32 @@ import ListsHome from './pages/ListsHome';
 import CreateList from './pages/CreateList';
 import ListDetail from './pages/ListDetail';
 import CreateTask from './pages/CreateTask';
+import Settings from './pages/Settings';
+import { ToastProvider } from './context/ToastContext';
+import { ConfirmProvider } from './context/ConfirmContext';
 import './index.css';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/calendrier" element={<CalendarMonth />} />
-          <Route path="/calendrier/:date" element={<CalendarDay />} />
-          <Route path="/carnet" element={<Notebook />} />
-          <Route path="/listes" element={<ListsHome />} />
-          <Route path="/listes/nouvelle" element={<CreateList />} />
-          <Route path="/listes/:listId" element={<ListDetail />} />
-          <Route path="/creer/:type" element={<CreateTask />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ToastProvider>
+      <ConfirmProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/calendrier" element={<CalendarMonth />} />
+              <Route path="/calendrier/:date" element={<CalendarDay />} />
+              <Route path="/carnet" element={<Notebook />} />
+              <Route path="/listes" element={<ListsHome />} />
+              <Route path="/listes/nouvelle" element={<CreateList />} />
+              <Route path="/listes/:listId" element={<ListDetail />} />
+              <Route path="/creer/:type" element={<CreateTask />} />
+              <Route path="/reglages" element={<Settings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ConfirmProvider>
+    </ToastProvider>
   );
 }
 

@@ -3,7 +3,7 @@ import { differenceInCalendarDays, isPast, isToday, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import './TaskCard.css';
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, onToggle }) {
     const dueDate = task.due_date ? new Date(task.due_date) : null;
     const isOverdue = dueDate && isPast(dueDate) && !isToday(dueDate);
     const daysLate = isOverdue ? differenceInCalendarDays(new Date(), dueDate) : null;
@@ -18,14 +18,14 @@ export default function TaskCard({ task }) {
                 <div className="title">{task.title}</div>
                 <div className="meta">
                     <span className="tag">
-                        <span className="dot" style={{ backgroundColor: task.category.color }} />
-                        {task.category.name}
+                        <span className="dot" style={{ backgroundColor: task.category_color }} />
+                        {task.category_name}
                     </span>
                     {isOverdue && <span className="overdue-tag">Retard {daysLate} j</span>}
                     {!isOverdue && dateLabel && <span className="time-tag">{dateLabel}</span>}
                 </div>
             </div>
-            <div className="check" />
+            <button className="check" onClick={() => onToggle(task.id, task.title)} />
         </div>
     );
 }

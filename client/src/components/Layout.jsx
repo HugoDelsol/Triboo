@@ -5,7 +5,9 @@ import BottomNav from './BottomNav';
 export default function Layout() {
   return (
     <>
-      <Outlet />
+      <div className="page-container">
+        <Outlet />
+      </div>
       <BottomNav />
     </>
   );

@@ -1,6 +1,14 @@
 /* src/index.css */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700&display=swap');
 
+.page-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+
 :root {
   --bg: #121110;
   --card: #1B1A18;

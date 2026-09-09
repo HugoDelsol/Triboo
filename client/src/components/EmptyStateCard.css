@@ -1,0 +1,14 @@
+/* src/components/EmptyStateCard.css */
+
+.empty-card {
+    background: var(--card);
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.empty-card p {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+}

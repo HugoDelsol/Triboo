@@ -4,11 +4,14 @@ import { mockTasks } from '../data/mockTasks';
 import TaskCard from '../components/TaskCard';
 import FilterSheet from '../components/FilterSheet';
 import { SlidersHorizontal } from 'lucide-react';
+import FloatingActionButton from '../components/FloatingActionButton';
+import CreateSheet from '../components/CreateSheet';
 import './Notebook.css';
 
 const PRIORITY_ORDER = { urgent: 0, important: 1, faible: 2 };
 
 export default function Tasks() {
+    const [isCreateOpen, setCreateOpen] = useState(false);
     const [isFilterOpen, setFilterOpen] = useState(false);
     const [filters, setFilters] = useState({
         type: 'all',       // 'all' | 'task' | 'memo' | 'appointment'
@@ -51,6 +54,9 @@ export default function Tasks() {
                     <p className="empty-state">Aucune tâche ne correspond à ces filtres.</p>
                 )}
             </div>
+
+            <FloatingActionButton onClick={() => setCreateOpen(true)} />
+            {isCreateOpen && <CreateSheet onClose={() => setCreateOpen(false)} />}
 
             {isFilterOpen && (
                 <FilterSheet

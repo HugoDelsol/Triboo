@@ -1,5 +1,5 @@
 // src/pages/CalendarMonth.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     startOfMonth,
@@ -14,23 +14,41 @@ import {
 import { fr } from 'date-fns/locale';
 import { addMonths, subMonths } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { mockTasks } from '../data/mockTasks';
+import FloatingActionButton from '../components/FloatingActionButton';
+import CreateSheet from '../components/CreateSheet';
+import { fetchTasks } from '../api/tasks';
 import './CalendarMonth.css';
 
 export default function CalendarMonth() {
+
+    const [isCreateOpen, setCreateOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [tasks, setTasks] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchTasks()
+            .then(setTasks)
+            .catch((err) => {
+                setError('Une erreur est survenue, réessaie plus tard.');
+            })
+            .finally(() => setIsLoading(false));
+    }, []);
 
     const gridStart = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 1 });
     const gridEnd = endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 });
     const days = eachDayOfInterval({ start: gridStart, end: gridEnd });
 
     function getTasksForDay(day) {
-        return mockTasks.filter(
-            (task) => task.due_date && isSameMonth(new Date(task.due_date), currentMonth)
-                && format(new Date(task.due_date), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
+        return tasks.filter(
+            (task) => task.due_date && format(new Date(task.due_date), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
         );
     }
+
+    if (isLoading) return <p className="empty-state">Chargement...</p>;
+    if (error) return <p className="empty-state">{error}</p>;
 
     return (
         <div className="content-scroll">
@@ -61,6 +79,8 @@ export default function CalendarMonth() {
                     })}
                 </div>
             </div>
+            <FloatingActionButton onClick={() => setCreateOpen(true)} />
+            {isCreateOpen && <CreateSheet onClose={() => setCreateOpen(false)} />}
         </div>
     );
 }

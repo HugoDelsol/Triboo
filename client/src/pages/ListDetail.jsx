@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { mockLists } from '../data/mockLists';
+import { useToast } from '../context/ToastContext';
 import './ListDetail.css';
 
 export default function ListDetail() {
     const { listId } = useParams();
     const navigate = useNavigate();
+    const { showToast } = useToast();
 
     const initialList = mockLists.find((list) => list.id === Number(listId));
     const [items, setItems] = useState(initialList?.items ?? []);
@@ -28,7 +30,11 @@ export default function ListDetail() {
     function handleAddItem(e) {
         e.preventDefault();
         const trimmed = newItemLabel.trim();
-        if (!trimmed) return;
+        if (!trimmed) {
+            showToast("L'élément ne peut pas être vide", 'error');
+            return;
+        }
+
 
         setItems((prev) => [
             ...prev,

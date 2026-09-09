@@ -9,8 +9,8 @@ export default function TaskDetailCard({ task }) {
         <div className={`detail-card p-${task.priority}`}>
             <div className="detail-header">
                 <span className="tag">
-                    <span className="dot" style={{ backgroundColor: task.category.color }} />
-                    {task.category.name}
+                    <span className="dot" style={{ backgroundColor: task.category_color }} />
+                    {task.category_name}
                 </span>
                 <h2 className="detail-title">{task.title}</h2>
             </div>

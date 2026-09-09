@@ -3,22 +3,28 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { mockCategories } from '../data/mockCategories';
+import { useToast } from '../context/ToastContext';
+
 import './CreateList.css';
 
 export default function CreateList() {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [categoryName, setCategoryName] = useState('');
+    const { showToast } = useToast();
 
     function handleSubmit(e) {
         e.preventDefault();
-        const trimmed = title.trim();
-        if (!trimmed) return;
+        const name = title.trim();
+        if (!name) {
+            showToast('Le nom de la liste ne peut pas être vide', 'error');
+            return;
+        }
 
         // Pas encore de backend : on log pour l'instant, la vraie création
         // se fera via un appel API plus tard (POST /lists)
-        console.log('Nouvelle liste :', { title: trimmed, categoryName });
-
+        console.log('Nouvelle liste :', { title: name, categoryName });
+        showToast(`Liste "${name}" créée`, 'success');
         navigate('/listes');
     }
 

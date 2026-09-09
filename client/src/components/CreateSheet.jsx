@@ -9,12 +9,13 @@ const CREATE_OPTIONS = [
     { type: 'appointment', label: 'Rendez-vous', Icon: CalendarClock },
 ];
 
-export default function CreateSheet({ onClose }) {
+export default function CreateSheet({ onClose, prefillDate }) {
     const navigate = useNavigate();
 
     function handleSelect(type) {
         onClose();
-        navigate(`/creer/${type}`);
+        const query = prefillDate ? `?date=${prefillDate}` : '';
+        navigate(`/creer/${type}${query}`);
     }
 
     return (

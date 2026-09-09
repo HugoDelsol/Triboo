@@ -1,8 +1,10 @@
 // src/pages/CreateTask.jsx
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { mockCategories } from '../data/mockCategories';
+import { useToast } from '../context/ToastContext';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+
 import './CreateTask.css';
 
 const TYPE_LABELS = {
@@ -20,12 +22,15 @@ const PRIORITY_OPTIONS = [
 export default function CreateTask() {
     const { type } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const prefilledDate = searchParams.get('date') ?? '';
+    const { showToast } = useToast();
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [categoryName, setCategoryName] = useState('');
     const [priority, setPriority] = useState('important');
-    const [dueDate, setDueDate] = useState('');
+    const [dueDate, setDueDate] = useState(prefilledDate);
     const [dueTime, setDueTime] = useState('');
     const [location, setLocation] = useState('');
 
@@ -34,8 +39,16 @@ export default function CreateTask() {
     function handleSubmit(e) {
         e.preventDefault();
         const trimmedTitle = title.trim();
-        if (!trimmedTitle) return;
-        if (isDateRequired && !dueDate) return;
+
+        if (!trimmedTitle) {
+            showToast('Le titre ne peut pas être vide', 'error');
+            return;
+        }
+
+        if (isDateRequired && !dueDate) {
+            showToast('Une date est requise pour ce type', 'error');
+            return;
+        }
 
         const newTask = {
             id: Date.now(),
@@ -52,7 +65,7 @@ export default function CreateTask() {
 
         // Pas encore de backend : la vraie création se fera via POST /tasks
         console.log('Nouvelle tâche :', newTask);
-
+        showToast(`${TYPE_LABELS[type]} créé${type === 'task' ? 'e' : ''}`, 'success');
         navigate('/');
     }
 
@@ -131,7 +144,7 @@ export default function CreateTask() {
                                 type="button"
                                 key={cat.name}
                                 className={`filter-chip${categoryName === cat.name ? ' active' : ''}`}
-                                onClick={() => setCategoryName(cat.name)}
+                                onClick={() => setCategoryName(categoryName === cat.name ? '' : cat.name)}
                             >
                                 <span className="chip-dot" style={{ backgroundColor: cat.color }} />
                                 {cat.name}
