@@ -6,9 +6,17 @@
         "dev": "node --watch src/index.js"
     },
     "dependencies": {
+        "bcrypt": "^6.0.0",
         "cors": "^2.8.6",
         "dotenv": "^17.4.2",
         "express": "^5.2.1",
+        "express-mysql-session": "^3.0.3",
+        "express-session": "^1.19.0",
         "mysql2": "^3.24.4"
+    },
+    "overrides": {
+        "express-mysql-session": {
+            "mysql2": "^3.23.1"
+        }
     }
 }

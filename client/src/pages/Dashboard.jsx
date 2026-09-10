@@ -4,7 +4,6 @@ import { fetchTasks, updateTaskStatus } from '../api/tasks';
 import { groupTasksBySection } from '../utils/groupTasksBySection';
 import { sortByPriority } from '../utils/sortByPriority';
 import TaskCard from '../components/TaskCard';
-import { currentProfile } from '../data/mockProfile';
 import { formatGreetingDate } from '../utils/formatGreetingDate';
 import SummaryPill from '../components/SummaryPill';
 import FloatingActionButton from '../components/FloatingActionButton';
@@ -12,9 +11,11 @@ import CreateSheet from '../components/CreateSheet';
 import EmptyStateCard from '../components/EmptyStateCard';
 import { useToast } from '../context/ToastContext';
 import { useConfirm } from '../context/ConfirmContext';
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
+    const { householdName, profileName } = useAuth();
     const { showToast } = useToast();
     const { confirm } = useConfirm();
     const [isCreateOpen, setCreateOpen] = useState(false);
@@ -59,8 +60,8 @@ export default function Dashboard() {
             <div className="phone">
 
                 <header>
-                    <div className="eyebrow">Foyer Delsol</div>
-                    <div className="greeting">Bonjour {currentProfile.name}</div>
+                    <div className="eyebrow">{householdName}</div>
+                    <div className="greeting">Bonjour {profileName}</div>
                     <div className="date-line">{formatGreetingDate()}</div>
 
                     <div className="summary-row">
