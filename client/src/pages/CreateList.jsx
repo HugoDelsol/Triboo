@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { mockCategories } from '../data/mockCategories';
 import { useToast } from '../context/ToastContext';
 
 import './CreateList.css';
@@ -48,7 +47,7 @@ export default function CreateList() {
                     />
 
                     <div className="category-picker">
-                        {mockCategories.map((cat) => (
+                        {/* {mockCategories.map((cat) => (
                             <button
                                 type="button"
                                 key={cat.name}
@@ -58,7 +57,7 @@ export default function CreateList() {
                                 <span className="chip-dot" style={{ backgroundColor: cat.color }} />
                                 {cat.name}
                             </button>
-                        ))}
+                        ))} */}
                     </div>
 
                     <button type="submit" className="submit-button">Créer la liste</button>

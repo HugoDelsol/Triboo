@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { fetchProfiles, createProfile as apiCreateProfile } from '../api/profiles';
+import './SelectProfile.css'
 
 export default function SelectProfile() {
     const [profiles, setProfiles] = useState([]);
@@ -21,7 +22,7 @@ export default function SelectProfile() {
 
     async function handleSelect(profileId) {
         try {
-            
+
             await selectProfile(profileId);
             navigate('/');
         } catch (err) {
@@ -46,19 +47,22 @@ export default function SelectProfile() {
 
     return (
         <div className="select-profile-page">
-            <h1>Qui es-tu ?</h1>
+            <h1 className="select-profile-title">Qui es-tu ?</h1>
 
-            {profiles.length === 0 && <p>Aucun profil pour l'instant, ajoute le tien.</p>}
+            {profiles.length === 0 && (
+                <p className="select-profile-empty">Aucun profil pour l'instant, ajoute le tien.</p>
+            )}
 
-            <div className="profile-list">
+            <div className="profile-grid">
                 {profiles.map((profile) => (
-                    <button key={profile.id} onClick={() => handleSelect(profile.id)}>
-                        {profile.name}
+                    <button key={profile.id} className="profile-card" onClick={() => handleSelect(profile.id)}>
+                        <span className="profile-avatar">{profile.name.charAt(0).toUpperCase()}</span>
+                        <span className="profile-name">{profile.name}</span>
                     </button>
                 ))}
             </div>
 
-            <form onSubmit={handleCreate}>
+            <form className="select-profile-form" onSubmit={handleCreate}>
                 <input
                     type="text"
                     placeholder="Ton prénom"
@@ -68,7 +72,7 @@ export default function SelectProfile() {
                 <button type="submit">Ajouter un profil</button>
             </form>
 
-            {error && <p className="error">{error}</p>}
+            {error && <p className="login-error">{error}</p>}
         </div>
     );
 }

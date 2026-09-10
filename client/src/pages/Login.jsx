@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import './Login.css'
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const { login } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     async function handleSubmit(e) {
@@ -18,7 +20,7 @@ export default function LoginPage() {
             await login(name, password);
             navigate('/select-profile');
         } catch (err) {
-            setError(err.message);
+            showToast(err.message, "error");
         }
     } return (
         <div className="login-page">

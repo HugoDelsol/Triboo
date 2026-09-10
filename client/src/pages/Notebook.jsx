@@ -1,6 +1,5 @@
 // src/pages/Notebook.jsx
 import { useState } from 'react';
-import { mockTasks } from '../data/mockTasks';
 import TaskCard from '../components/TaskCard';
 import FilterSheet from '../components/FilterSheet';
 import { SlidersHorizontal } from 'lucide-react';
@@ -24,7 +23,7 @@ export default function Tasks() {
         ([key, value]) => key !== 'sortBy' && value !== 'all'
     ).length;
 
-    const filteredTasks = mockTasks
+    /* const filteredTasks = mockTasks
         .filter((task) => filters.type === 'all' || task.type === filters.type)
         .filter((task) => filters.category === 'all' || task.category.name === filters.category)
         .filter((task) => filters.status === 'all' || task.status === filters.status)
@@ -33,7 +32,7 @@ export default function Tasks() {
                 return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
             }
             return new Date(a.due_date ?? 0) - new Date(b.due_date ?? 0);
-        });
+        }); */
 
     return (
         <div className="content-scroll">
@@ -46,13 +45,13 @@ export default function Tasks() {
                     </button>
                 </div>
 
-                {filteredTasks.map((task) => (
+                {/* {filteredTasks.map((task) => (
                     <TaskCard key={task.id} task={task} />
                 ))}
 
                 {filteredTasks.length === 0 && (
                     <p className="empty-state">Aucune tâche ne correspond à ces filtres.</p>
-                )}
+                )} */}
             </div>
 
             <FloatingActionButton onClick={() => setCreateOpen(true)} />

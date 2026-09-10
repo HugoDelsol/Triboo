@@ -12,7 +12,8 @@ export async function getAllTasks(req, res) {
         const tasks = await findAllTasks(req.householdId);
         res.json(tasks);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur getAllTasks:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -22,7 +23,8 @@ export async function getTaskById(req, res) {
         if (!task) return res.status(404).json({ message: 'Tâche introuvable' });
         res.json(task);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur getTaskById:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -39,7 +41,8 @@ export async function createTask(req, res) {
         const id = await insertTask({ ...req.body, household_id: req.householdId });
         res.status(201).json({ id, message: 'Tâche créée' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur createTask:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -49,7 +52,8 @@ export async function updateTask(req, res) {
         if (!updated) return res.status(404).json({ message: 'Tâche introuvable' });
         res.json({ message: 'Tâche mise à jour' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur updateTask:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -59,6 +63,7 @@ export async function removeTask(req, res) {
         if (!deleted) return res.status(404).json({ message: 'Tâche introuvable' });
         res.json({ message: 'Tâche supprimée' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur removeTask:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }

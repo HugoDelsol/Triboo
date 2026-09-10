@@ -1,5 +1,5 @@
 // server/src/controllers/profiles.controller.js
-import { findProfilesByHousehold, findProfileById, insertProfile } from '../repositories/profile.repository.js';
+import { findProfilesByHousehold, findProfileById, insertProfile, countTasksAssignedToProfile, deleteProfile as deleteProfileRepo } from '../repositories/profile.repository.js';
 
 export async function getProfiles(req, res) {
     try {
@@ -37,5 +37,28 @@ export async function selectProfile(req, res) {
         res.json({ profileId: profile.id, profileName: profile.name });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+}
+
+export async function removeProfile(req, res) {
+    if (Number(req.params.id) === req.session.profileId) {
+        return res.status(400).json({ message: 'Tu ne peux pas supprimer le profil que tu utilises actuellement' });
+    }
+    try {
+        const profile = await findProfileById(req.params.id, req.householdId);
+        if (!profile) return res.status(404).json({ message: 'Profil introuvable' });
+
+        const tasksCount = await countTasksAssignedToProfile(req.params.id, req.householdId);
+        if (tasksCount > 0) {
+            return res.status(409).json({
+                message: `Ce profil est assigné à ${tasksCount} tâche${tasksCount > 1 ? 's' : ''}, impossible de le supprimer`,
+            });
+        }
+
+        await deleteProfileRepo(req.params.id, req.householdId);
+        res.json({ message: 'Profil supprimé' });
+    } catch (error) {
+        console.error('Erreur removeProfile:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }

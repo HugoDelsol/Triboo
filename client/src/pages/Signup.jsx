@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import './Login.css';
 
 export default function SignupPage() {
@@ -10,6 +11,7 @@ export default function SignupPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState(null);
     const { signup } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     async function handleSubmit(e) {
@@ -17,7 +19,7 @@ export default function SignupPage() {
         setError(null);
 
         if (password !== confirmPassword) {
-            setError('Les mots de passe ne correspondent pas');
+            showToast('Les mots de passe ne correspondent pas', 'error');
             return;
         }
 
@@ -25,7 +27,7 @@ export default function SignupPage() {
             await signup(name, password);
             navigate('/select-profile');
         } catch (err) {
-            setError(err.message);
+            showToast('Ce nom de foyer est déjà pris', 'error');
         }
     }
 

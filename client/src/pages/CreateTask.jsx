@@ -1,7 +1,6 @@
 // src/pages/CreateTask.jsx
 import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { mockCategories } from '../data/mockCategories';
 import { useToast } from '../context/ToastContext';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -55,7 +54,7 @@ export default function CreateTask() {
             type,
             title: trimmedTitle,
             description: description.trim() || null,
-            category: mockCategories.find((c) => c.name === categoryName) ?? null,
+            /* category: mockCategories.find((c) => c.name === categoryName) ?? null, */
             due_date: dueDate || null,
             due_time: type === 'appointment' ? dueTime || null : null,
             location: type === 'appointment' ? location.trim() || null : null,

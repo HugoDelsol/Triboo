@@ -45,7 +45,8 @@ export async function login(req, res) {
         req.session.householdId = household.id;
         res.json({ message: 'Connecté', householdId: household.id, householdName: household.name });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Erreur login:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 

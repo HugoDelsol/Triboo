@@ -27,10 +27,7 @@ export default function CalendarDay() {
             })
             .finally(() => setIsLoading(false));
     }, []);
-
-    console.log('date recherchée:', date);
-    console.log('tasks:', tasks);
-
+    
     const targetDate = parseISO(date);
     const dayTasks = tasks.filter(
         (task) => task.due_date && format(new Date(task.due_date), 'yyyy-MM-dd') === date

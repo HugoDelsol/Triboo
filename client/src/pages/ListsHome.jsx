@@ -1,6 +1,5 @@
 // src/pages/ListsHome.jsx
 import { Link } from 'react-router-dom';
-import { mockLists } from '../data/mockLists';
 import { useNavigate } from 'react-router-dom';
 import FloatingActionButton from '../components/FloatingActionButton';
 import './ListsHome.css'
@@ -13,7 +12,7 @@ export default function ListsHome() {
             <div className="phone">
                 <h1 className="lists-title">Listes</h1>
 
-                {mockLists.map((list) => {
+                {/* {mockLists.map((list) => {
                     const checkedCount = list.items.filter((item) => item.is_checked).length;
                     return (
                         <Link key={list.id} to={`/listes/${list.id}`} className="list-card">
@@ -29,7 +28,7 @@ export default function ListsHome() {
                             </div>
                         </Link>
                     );
-                })}
+                })} */}
             </div>
             <FloatingActionButton onClick={() => navigate('/listes/nouvelle')} />
         </div>

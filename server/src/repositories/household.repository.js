@@ -11,7 +11,7 @@ export async function insertHousehold(name, hashedPassword) {
 
 export async function findHouseholdByName(name) {
     const [rows] = await pool.query(
-        `SELECT id, name, password FROM household WHERE name = ?`,
+        `SELECT id, name, password_hash FROM household WHERE name = ?`,
         [name]
     );
     return rows[0] || null;

@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import SelectProfile from './components/SelectProfile';
 import ProfileRequiredRoute from './components/ProfileRequiredRoute';
+import Logout from './components/Logout';
 import './index.css';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/listes/:listId" element={<ProfileRequiredRoute><ListDetail /></ProfileRequiredRoute>} />
                 <Route path="/creer/:type" element={<ProfileRequiredRoute><CreateTask /></ProfileRequiredRoute>} />
                 <Route path="/reglages" element={<ProfileRequiredRoute><Settings /></ProfileRequiredRoute>} />
+                <Route path="/logout" element={<Logout/>} />
               </Route>
             </Routes>
           </AuthProvider>

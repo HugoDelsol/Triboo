@@ -31,7 +31,7 @@ export function ConfirmProvider({ children }) {
                                 Annuler
                             </button>
                             <button className="confirm-delete" onClick={() => handleChoice(true)}>
-                                Supprimer
+                                Continuer
                             </button>
                         </div>
                     </div>

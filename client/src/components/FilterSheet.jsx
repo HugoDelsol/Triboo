@@ -1,6 +1,5 @@
 // src/components/FilterSheet.jsx
 import { X } from 'lucide-react';
-import { mockCategories } from '../data/mockCategories';
 import './FilterSheet.css';
 
 const TYPE_OPTIONS = [
@@ -65,7 +64,7 @@ export default function FilterSheet({ filters, onChange, onClose }) {
                         onClick={() => updateFilter('category', 'all')}
                         label="Toutes"
                     />
-                    {mockCategories.map((cat) => (
+                    {/* {mockCategories.map((cat) => (
                         <FilterChip
                             key={cat.name}
                             active={filters.category === cat.name}
@@ -73,7 +72,7 @@ export default function FilterSheet({ filters, onChange, onClose }) {
                             label={cat.name}
                             dotColor={cat.color}
                         />
-                    ))}
+                    ))} */}
                 </FilterGroup>
 
                 <FilterGroup label="Trier par">

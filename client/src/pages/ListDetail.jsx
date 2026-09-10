@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
-import { mockLists } from '../data/mockLists';
 import { useToast } from '../context/ToastContext';
 import './ListDetail.css';
 

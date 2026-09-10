@@ -1,0 +1,117 @@
+/* SelectProfile.css */
+.select-profile-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #121110;
+    padding: 24px;
+}
+
+.select-profile-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: #F5F0E8;
+    margin: 0 0 32px;
+    text-align: center;
+}
+
+.select-profile-empty {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #8A8580;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 32px;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    transition: transform 0.15s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-2px);
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #1B1A18;
+    border: 2px solid #E8B23D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 24px;
+    color: #E8B23D;
+}
+
+.profile-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #F5F0E8;
+}
+
+.select-profile-form {
+    background-color: #1B1A18;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.select-profile-form input {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #F5F0E8;
+    background-color: #121110;
+    border: 1px solid #2A2825;
+    border-radius: 8px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.select-profile-form input:focus {
+    border-color: #E8B23D;
+}
+
+.select-profile-form button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #121110;
+    background-color: #E8B23D;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.select-profile-form button:hover {
+    opacity: 0.9;
+}

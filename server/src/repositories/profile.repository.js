@@ -24,3 +24,22 @@ export async function insertProfile(householdId, name, avatarUrl = null) {
     );
     return result.insertId;
 }
+
+export async function countTasksAssignedToProfile(profileId, householdId) {
+    const [rows] = await pool.query(
+        `SELECT COUNT(*) AS count
+     FROM task_assignees ta
+     JOIN tasks t ON t.id = ta.task_id
+     WHERE ta.profile_id = ? AND t.household_id = ?`,
+        [profileId, householdId]
+    );
+    return rows[0].count;
+}
+
+export async function deleteProfile(id, householdId) {
+    const [result] = await pool.query(
+        `DELETE FROM profiles WHERE id = ? AND household_id = ?`,
+        [id, householdId]
+    );
+    return result.affectedRows > 0;
+}

@@ -36,3 +36,15 @@ export async function selectProfile(profileId) {
     }
     return response.json();
 }
+
+export async function deleteProfile(profileId) {
+    const response = await fetch(`${API_URL}/profiles/${profileId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Impossible de supprimer le profil');
+    }
+    return response.json();
+}
