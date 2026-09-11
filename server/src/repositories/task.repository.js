@@ -27,9 +27,9 @@ export async function findTaskById(id, householdId) {
 export async function insertTask(data) {
     const [result] = await pool.query(
         `INSERT INTO tasks
-      (household_id, category_id, type, title, description, due_date, due_time, location, priority, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-        [data.household_id, data.category_id, data.type, data.title, data.description, data.due_date, data.due_time, data.location, data.priority]
+      (household_id, created_by_profile_id, category_id, type, title, description, due_date, due_time, location, priority, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+        [data.household_id, data.profile_id, data.category, data.type, data.title, data.description, data.due_date, data.due_time, data.location, data.priority]
     );
     return result.insertId;
 }

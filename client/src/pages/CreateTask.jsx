@@ -1,7 +1,9 @@
 // src/pages/CreateTask.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import { fetchCategories } from '../api/categories';
+import { createTask as apiCreateTask } from '../api/tasks';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import './CreateTask.css';
@@ -24,10 +26,12 @@ export default function CreateTask() {
     const [searchParams] = useSearchParams();
     const prefilledDate = searchParams.get('date') ?? '';
     const { showToast } = useToast();
-
+    const [error, setError] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [categoryName, setCategoryName] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [priority, setPriority] = useState('important');
     const [dueDate, setDueDate] = useState(prefilledDate);
     const [dueTime, setDueTime] = useState('');
@@ -35,7 +39,16 @@ export default function CreateTask() {
 
     const isDateRequired = type === 'task' || type === 'appointment';
 
-    function handleSubmit(e) {
+    useEffect(() => {
+        fetchCategories()
+            .then(setCategories)
+            .catch((err) => {
+                setError('Une erreur est survenue, réessaie plus tard.')
+            })
+            .finally(() => setIsLoading(false));
+    }, []);
+
+    async function handleSubmit(e) {
         e.preventDefault();
         const trimmedTitle = title.trim();
 
@@ -54,7 +67,7 @@ export default function CreateTask() {
             type,
             title: trimmedTitle,
             description: description.trim() || null,
-            /* category: mockCategories.find((c) => c.name === categoryName) ?? null, */
+            category: selectedCategoryId ?? null,
             due_date: dueDate || null,
             due_time: type === 'appointment' ? dueTime || null : null,
             location: type === 'appointment' ? location.trim() || null : null,
@@ -62,11 +75,17 @@ export default function CreateTask() {
             status: 'pending',
         };
 
-        // Pas encore de backend : la vraie création se fera via POST /tasks
-        console.log('Nouvelle tâche :', newTask);
-        showToast(`${TYPE_LABELS[type]} créé${type === 'task' ? 'e' : ''}`, 'success');
-        navigate('/');
+        try {
+            await apiCreateTask(newTask);
+            showToast(`Tâche "${newTask.title}" ajoutée`, 'success');
+            navigate('/');
+        } catch (err) {
+            showToast(err.message, 'error');
+        }
     }
+
+    if (isLoading) return <p className="empty-state">Chargement...</p>;
+    if (error) return <p className="empty-state">{error}</p>;
 
     return (
         <div className="content-scroll">
@@ -75,7 +94,7 @@ export default function CreateTask() {
                     <ArrowLeft size={18} />
                 </button>
 
-                <h1 className="create-task-title">Nouveau {TYPE_LABELS[type]?.toLowerCase()}</h1>
+                <h1 className="create-task-title">{TYPE_LABELS[type] === "Tâche" ? "Nouvelle" : "Nouveau"} {TYPE_LABELS[type]?.toLowerCase()}</h1>
 
                 <form onSubmit={handleSubmit} className="create-task-form">
                     <input
@@ -138,12 +157,13 @@ export default function CreateTask() {
 
                     <div className="field-label">Catégorie</div>
                     <div className="chip-row">
-                        {mockCategories.map((cat) => (
+
+                        {categories.map((cat) => (                            
                             <button
                                 type="button"
-                                key={cat.name}
-                                className={`filter-chip${categoryName === cat.name ? ' active' : ''}`}
-                                onClick={() => setCategoryName(categoryName === cat.name ? '' : cat.name)}
+                                key={cat.id}
+                                className={`filter-chip${selectedCategoryId === cat.id ? ' active' : ''}`}
+                                onClick={() => setSelectedCategoryId(selectedCategoryId === cat.id ? null : cat.id)}
                             >
                                 <span className="chip-dot" style={{ backgroundColor: cat.color }} />
                                 {cat.name}

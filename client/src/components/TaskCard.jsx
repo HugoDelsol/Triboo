@@ -17,10 +17,12 @@ export default function TaskCard({ task, onToggle }) {
             <div className="body">
                 <div className="title">{task.title}</div>
                 <div className="meta">
-                    <span className="tag">
-                        <span className="dot" style={{ backgroundColor: task.category_color }} />
-                        {task.category_name}
-                    </span>
+                    {task.category_id && (
+                        <span className="tag">
+                            <span className="dot" style={{ backgroundColor: task.category_color }} />
+                            {task.category_name}
+                        </span>
+                    )}
                     {isOverdue && <span className="overdue-tag">Retard {daysLate} j</span>}
                     {!isOverdue && dateLabel && <span className="time-tag">{dateLabel}</span>}
                 </div>

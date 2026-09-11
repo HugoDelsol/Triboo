@@ -29,7 +29,9 @@ export async function getTaskById(req, res) {
 }
 
 export async function createTask(req, res) {
+    const profileId = req.session.profileId;
     const { title, type } = req.body;
+    
     if (!title?.trim()) {
         return res.status(400).json({ message: 'Le titre est requis' });
     }
@@ -38,7 +40,7 @@ export async function createTask(req, res) {
     }
 
     try {
-        const id = await insertTask({ ...req.body, household_id: req.householdId });
+        const id = await insertTask({ ...req.body, profile_id: profileId, household_id: req.householdId });
         res.status(201).json({ id, message: 'Tâche créée' });
     } catch (error) {
         console.error('Erreur createTask:', error);
