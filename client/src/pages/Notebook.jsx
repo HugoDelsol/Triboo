@@ -1,15 +1,23 @@
 // src/pages/Notebook.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TaskCard from '../components/TaskCard';
 import FilterSheet from '../components/FilterSheet';
 import { SlidersHorizontal } from 'lucide-react';
 import FloatingActionButton from '../components/FloatingActionButton';
 import CreateSheet from '../components/CreateSheet';
+import { useConfirm } from '../context/ConfirmContext';
+import { useToast } from '../context/ToastContext';
+import { fetchTasks, updateTaskStatus } from '../api/tasks';
 import './Notebook.css';
 
 const PRIORITY_ORDER = { urgent: 0, important: 1, faible: 2 };
 
 export default function Tasks() {
+    const { showToast } = useToast();
+    const { confirm } = useConfirm();
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(true);
+    const [tasks, setTasks] = useState([]);
     const [isCreateOpen, setCreateOpen] = useState(false);
     const [isFilterOpen, setFilterOpen] = useState(false);
     const [filters, setFilters] = useState({
@@ -19,20 +27,50 @@ export default function Tasks() {
         sortBy: 'date',    // 'date' | 'priority'
     });
 
+    useEffect(() => {
+        fetchTasks()
+            .then(setTasks)
+            .catch((err) => {
+                setError('Une erreur est survenue, réessaie plus tard.');
+            })
+            .finally(() => setIsLoading(false));
+    }, []);
+
     const activeFilterCount = Object.entries(filters).filter(
         ([key, value]) => key !== 'sortBy' && value !== 'all'
     ).length;
 
-    /* const filteredTasks = mockTasks
-        .filter((task) => filters.type === 'all' || task.type === filters.type)
-        .filter((task) => filters.category === 'all' || task.category.name === filters.category)
-        .filter((task) => filters.status === 'all' || task.status === filters.status)
+    const filteredTasks = tasks
+        .filter((tasks) => filters.type === 'all' || tasks.type === filters.type)
+        .filter((tasks) => filters.category === 'all' || tasks.category_name === filters.category)
+        .filter((tasks) => filters.status === 'all' || tasks.status === filters.status)
         .sort((a, b) => {
             if (filters.sortBy === 'priority') {
                 return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
             }
             return new Date(a.due_date ?? 0) - new Date(b.due_date ?? 0);
-        }); */
+        });
+
+    async function handleToggleTask(taskId, taskTitle) {
+        const confirmed = await confirm(`Marquer "${taskTitle}" comme faite ?`);
+        if (!confirmed) return;
+
+        try {
+            await updateTaskStatus(taskId, 'done');
+            setTasks((prev) =>
+                prev.map((task) =>
+                    task.id === taskId ? { ...task, status: 'done' } : task
+                )
+            );
+            showToast(`"${taskTitle}" marquée comme faite`, 'success');
+        } catch (err) {
+            console.error(err);
+            showToast('Impossible de mettre à jour la tâche', 'error');
+        }
+    }
+
+    if (isLoading) return <p className="empty-state">Chargement...</p>;
+    if (error) return <p className="empty-state">{error}</p>;
 
     return (
         <div className="content-scroll">
@@ -45,13 +83,12 @@ export default function Tasks() {
                     </button>
                 </div>
 
-                {/* {filteredTasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                {filteredTasks.map((task) => (
+                    <TaskCard key={task.id} task={task} onToggle={handleToggleTask} />
                 ))}
-
                 {filteredTasks.length === 0 && (
                     <p className="empty-state">Aucune tâche ne correspond à ces filtres.</p>
-                )} */}
+                )}
             </div>
 
             <FloatingActionButton onClick={() => setCreateOpen(true)} />

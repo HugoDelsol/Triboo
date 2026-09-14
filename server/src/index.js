@@ -10,6 +10,7 @@ import tasksRouter from './routes/tasks.routes.js';
 import householdRouter from './routes/household.routes.js';
 import profilesRouter from './routes/profiles.routes.js';
 import categoriesRouter from './routes/categories.routes.js';
+import listsRouter from './routes/lists.routes.js';
 
 const app = express();
 app.use(cors({
@@ -23,6 +24,7 @@ app.use('/api/tasks', requireAuth, tasksRouter);
 app.use('/api/households', householdRouter);
 app.use('/api/profiles', requireAuth, profilesRouter);
 app.use('/api/categories', requireAuth, categoriesRouter);
+app.use('/api/lists', requireAuth, listsRouter);
 
 app.use((err, req, res, next) => {
     console.error('Erreur non gérée:', err);

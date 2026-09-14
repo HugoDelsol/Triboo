@@ -66,6 +66,7 @@ export default function CalendarMonth() {
                 <div className="calendar-grid">
                     {days.map((day) => {
                         const dayTasks = getTasksForDay(day);
+                        const allDone = dayTasks.length > 0 && dayTasks.every((task) => task.status === 'done');
                         return (
                             <button
                                 key={day.toISOString()}
@@ -73,10 +74,25 @@ export default function CalendarMonth() {
                                 onClick={() => navigate(`/calendrier/${format(day, 'yyyy-MM-dd')}`)}
                             >
                                 <span className="day-number">{format(day, 'd')}</span>
-                                {dayTasks.length > 0 && <span className="day-dot" />}
+                                {dayTasks.length > 0 && <span className={`day-dot${allDone ? ' done' : ''}`} />}
                             </button>
                         );
                     })}
+                </div>
+
+                <div className="calendar-legend">
+                    <div className="legend-item">
+                        <span className="day-dot" />
+                        <span>Tâches à faire</span>
+                    </div>
+                    <div className="legend-item">
+                        <span className="day-dot done" />
+                        <span>Journée terminée</span>
+                    </div>
+                    <div className="legend-item">
+                        <span className="legend-today-marker" />
+                        <span>Aujourd'hui</span>
+                    </div>
                 </div>
             </div>
             <FloatingActionButton onClick={() => setCreateOpen(true)} />

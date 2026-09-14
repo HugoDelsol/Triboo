@@ -21,21 +21,42 @@
     border-left-color: var(--faible);
 }
 
+.detail-card.done {
+    opacity: 0.55;
+}
+
+.detail-card.done .detail-title,
+.detail-card.done .detail-description {
+    text-decoration: line-through;
+}
+
+/* Header : catégorie/titre empilés + menu (roue crantée) centré */
+
 .detail-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
     margin-bottom: 10px;
 }
 
-.detail-header .tag {
+.detail-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-header-text .tag {
     font-size: 11px;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 5px;
     color: var(--ink-soft);
-    margin-bottom: 8px;
 }
 
-.detail-header .tag .dot {
+.detail-header-text .tag .dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -47,6 +68,67 @@
     font-size: 18px;
     color: var(--ink);
 }
+
+/* Menu (roue crantée) */
+
+.detail-menu-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.detail-menu-trigger {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+}
+
+.detail-menu-trigger:hover {
+    color: var(--ink);
+}
+
+.detail-menu {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    background-color: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10;
+    min-width: 160px;
+}
+
+.detail-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.15s ease;
+}
+
+.detail-menu-item:hover {
+    background-color: var(--bg);
+}
+
+.detail-menu-item.danger {
+    color: var(--urgent);
+}
+
+/* Contenu de la carte */
 
 .detail-description {
     font-size: 13.5px;
@@ -86,4 +168,10 @@
     border: 1px solid var(--line);
     border-radius: 20px;
     padding: 6px 12px;
+}
+
+.detail-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

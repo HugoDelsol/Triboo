@@ -1,30 +1,42 @@
 // src/pages/CreateList.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import { createList as apiCreateList } from '../api/lists';
+import { fetchCategories } from '../api/categories';
 
 import './CreateList.css';
 
 export default function CreateList() {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
-    const [categoryName, setCategoryName] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const { showToast } = useToast();
 
-    function handleSubmit(e) {
+    useEffect(() => {
+        fetchCategories()
+            .then(setCategories)
+            .catch(() => showToast('Impossible de charger les catégories', 'error'))
+            .finally(() => setIsLoading(false));
+    }, []);
+
+    async function handleSubmit(e) {
         e.preventDefault();
-        const name = title.trim();
-        if (!name) {
+        const trimmedTitle = title.trim();
+        if (!trimmedTitle) {
             showToast('Le nom de la liste ne peut pas être vide', 'error');
             return;
         }
-
-        // Pas encore de backend : on log pour l'instant, la vraie création
-        // se fera via un appel API plus tard (POST /lists)
-        console.log('Nouvelle liste :', { title: name, categoryName });
-        showToast(`Liste "${name}" créée`, 'success');
-        navigate('/listes');
+        try {
+            await apiCreateList(trimmedTitle, selectedCategoryId);
+            showToast(`Liste "${trimmedTitle}" créée`, 'success');
+            navigate('/listes');
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
     }
 
     return (
@@ -46,19 +58,21 @@ export default function CreateList() {
                         autoFocus
                     />
 
-                    <div className="category-picker">
-                        {/* {mockCategories.map((cat) => (
-                            <button
-                                type="button"
-                                key={cat.name}
-                                className={`filter-chip${categoryName === cat.name ? ' active' : ''}`}
-                                onClick={() => setCategoryName(cat.name)}
-                            >
-                                <span className="chip-dot" style={{ backgroundColor: cat.color }} />
-                                {cat.name}
-                            </button>
-                        ))} */}
-                    </div>
+                    {!isLoading && (
+                        <div className="category-picker">
+                            {categories.map((cat) => (
+                                <button
+                                    type="button"
+                                    key={cat.id}
+                                    className={`filter-chip${selectedCategoryId === cat.id ? ' active' : ''}`}
+                                    onClick={() => setSelectedCategoryId(selectedCategoryId === cat.id ? null : cat.id)}
+                                >
+                                    <span className="chip-dot" style={{ backgroundColor: cat.color }} />
+                                    {cat.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     <button type="submit" className="submit-button">Créer la liste</button>
                 </form>

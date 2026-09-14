@@ -70,9 +70,38 @@
     font-weight: 500;
 }
 
-.calendar-day .day-dot {
+.calendar-day .day-dot,
+.day-dot {
     width: 5px;
     height: 5px;
     border-radius: 50%;
     background: var(--gold);
+}
+
+.day-dot.done {
+    background-color: var(--faible);
+}
+
+.calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+.legend-today-marker {
+    width: 10px;
+    height: 10px;
+    border-radius: 20%;
+    border: 1px solid var(--gold);
 }

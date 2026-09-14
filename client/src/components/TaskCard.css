@@ -79,3 +79,69 @@
   color: var(--urgent);
   font-weight: 600;
 }
+
+.card {
+  position: relative;
+}
+
+.card.done .title {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.card-menu-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.card-menu-trigger {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.card-menu-trigger:hover {
+  color: var(--ink);
+}
+
+.card-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;
+  min-width: 160px;
+}
+
+.card-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.card-menu-item:hover {
+  background-color: var(--bg);
+}
+
+.card-menu-item.danger {
+  color: var(--urgent);
+}

@@ -1,0 +1,16 @@
+/* src/context/TaskDetailContext.css */
+
+.task-detail-modal {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--bg);
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    z-index: 100;
+    max-height: 85vh;
+    overflow-y: auto;
+}
