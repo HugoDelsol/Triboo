@@ -9,7 +9,7 @@ import {
 
 export async function getAllTasks(req, res) {
     try {
-        const tasks = await findAllTasks(req.householdId);
+        const tasks = await findAllTasks(req.householdId, req.session.profileId);
         res.json(tasks);
     } catch (error) {
         console.error('Erreur getAllTasks:', error);
@@ -29,9 +29,8 @@ export async function getTaskById(req, res) {
 }
 
 export async function createTask(req, res) {
-    const profileId = req.session.profileId;
     const { title, type } = req.body;
-    
+
     if (!title?.trim()) {
         return res.status(400).json({ message: 'Le titre est requis' });
     }
@@ -40,7 +39,11 @@ export async function createTask(req, res) {
     }
 
     try {
-        const id = await insertTask({ ...req.body, profile_id: profileId, household_id: req.householdId });
+        const id = await insertTask({
+            ...req.body,
+            household_id: req.householdId,
+            created_by_profile_id: req.session.profileId,
+        });
         res.status(201).json({ id, message: 'Tâche créée' });
     } catch (error) {
         console.error('Erreur createTask:', error);

@@ -35,3 +35,48 @@ textarea.add-item-input {
     flex-wrap: wrap;
     gap: 8px;
 }
+
+.checkboxDiv{
+    margin: 10px 0 0 0;
+}
+
+.checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.checkbox-field input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    background-color: var(--card);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.checkbox-field input[type="checkbox"]:checked {
+    background-color: var(--important);
+    border-color: var(--important);
+}
+
+.checkbox-field input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--bg);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}

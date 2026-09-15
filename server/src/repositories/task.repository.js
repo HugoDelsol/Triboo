@@ -1,14 +1,15 @@
 // server/src/repositories/task.repository.js
 import { pool } from '../config/database.js';
 
-export async function findAllTasks(householdId) {
+export async function findAllTasks(householdId, profileId) {
     const [rows] = await pool.query(
         `SELECT t.*, c.name AS category_name, c.color AS category_color
      FROM tasks t
      LEFT JOIN categories c ON c.id = t.category_id
      WHERE t.household_id = ?
+       AND (t.is_shared = TRUE OR t.created_by_profile_id = ?)
      ORDER BY t.due_date ASC`,
-        [householdId]
+        [householdId, profileId]
     );
     return rows;
 }
@@ -27,9 +28,9 @@ export async function findTaskById(id, householdId) {
 export async function insertTask(data) {
     const [result] = await pool.query(
         `INSERT INTO tasks
-      (household_id, created_by_profile_id, category_id, type, title, description, due_date, due_time, location, priority, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-        [data.household_id, data.profile_id, data.category, data.type, data.title, data.description, data.due_date, data.due_time, data.location, data.priority]
+      (household_id, created_by_profile_id, category_id, type, title, description, due_date, due_time, location, priority, status, is_shared, wants_reminder)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)`,
+        [data.household_id, data.created_by_profile_id, data.category_id, data.type, data.title, data.description, data.due_date, data.due_time, data.location, data.priority, data.is_shared, data.wants_reminder]
     );
     return result.insertId;
 }

@@ -36,6 +36,8 @@ export default function CreateTask() {
     const [dueDate, setDueDate] = useState(prefilledDate);
     const [dueTime, setDueTime] = useState('');
     const [location, setLocation] = useState('');
+    const [isShared, setIsShared] = useState(true);
+    const [wantsReminder, setWantsReminder] = useState(true);
 
     const isDateRequired = type === 'task' || type === 'appointment';
 
@@ -63,16 +65,17 @@ export default function CreateTask() {
         }
 
         const newTask = {
-            id: Date.now(),
             type,
             title: trimmedTitle,
             description: description.trim() || null,
-            category: selectedCategoryId ?? null,
+            category_id: selectedCategoryId ?? null,
             due_date: dueDate || null,
             due_time: type === 'appointment' ? dueTime || null : null,
             location: type === 'appointment' ? location.trim() || null : null,
             priority,
             status: 'pending',
+            is_shared: isShared,
+            wants_reminder: wantsReminder,
         };
 
         try {
@@ -158,7 +161,7 @@ export default function CreateTask() {
                     <div className="field-label">Catégorie</div>
                     <div className="chip-row">
 
-                        {categories.map((cat) => (                            
+                        {categories.map((cat) => (
                             <button
                                 type="button"
                                 key={cat.id}
@@ -170,6 +173,29 @@ export default function CreateTask() {
                             </button>
                         ))}
                     </div>
+
+                    <div className='checkboxDiv'>
+                        <label className="checkbox-field">
+                            <input
+                                type="checkbox"
+                                checked={!isShared}
+                                onChange={(e) => setIsShared(!e.target.checked)}
+                            />
+                            Garder pour moi
+                        </label>
+
+                        {isDateRequired && (
+                            <label className="checkbox-field">
+                                <input
+                                    type="checkbox"
+                                    checked={!wantsReminder}
+                                    onChange={(e) => setWantsReminder(!e.target.checked)}
+                                />
+                                Ne pas me rappeler
+                            </label>
+                        )}
+                    </div>
+
 
                     <button type="submit" className="submit-button">Créer</button>
                 </form>

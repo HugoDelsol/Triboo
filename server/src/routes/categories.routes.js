@@ -6,12 +6,14 @@ import {
     editCategory,
     removeCategory,
 } from '../controllers/categories.controller.js';
+import { createCategoryRules, editCategoryRules, categoryIdParamRule } from '../validators/categories.validator.js';
+import { validate } from '../middlewares/validate.js';
 
 const router = Router();
 
 router.get('/', getAllCategories);
-router.post('/', createCategory);
-router.put('/:id', editCategory);
-router.delete('/:id', removeCategory);
+router.post('/', createCategoryRules, validate, createCategory);
+router.put('/:id', editCategoryRules, validate, editCategory);
+router.delete('/:id', categoryIdParamRule, validate, removeCategory);
 
 export default router;

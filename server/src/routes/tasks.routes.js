@@ -7,13 +7,15 @@ import {
   updateTask,
   removeTask,
 } from '../controllers/tasks.controller.js';
+import { createTaskRules, updateTaskRules, taskIdParamRule } from '../validators/tasks.validator.js';
+import { validate } from '../middlewares/validate.js';
 
 const router = Router();
 
 router.get('/', getAllTasks);
-router.get('/:id', getTaskById);
-router.post('/', createTask);
-router.put('/:id', updateTask);
-router.delete('/:id', removeTask);
+router.get('/:id', taskIdParamRule, validate, getTaskById);
+router.post('/', createTaskRules, validate, createTask);
+router.put('/:id', updateTaskRules, validate, updateTask);
+router.delete('/:id', taskIdParamRule, validate, removeTask);
 
 export default router;

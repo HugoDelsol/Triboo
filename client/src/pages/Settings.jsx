@@ -32,7 +32,7 @@ export default function Settings() {
             .catch(() => showToast('Impossible de charger les catégories', 'error'))
             .finally(() => setIsLoadingCategories(false));
     }, []);
-    
+
     const [profiles, setProfiles] = useState([]);
     const [isLoadingProfiles, setIsLoadingProfiles] = useState(true);
 
@@ -42,7 +42,7 @@ export default function Settings() {
             .catch(() => showToast('Impossible de charger les profils', 'error'))
             .finally(() => setIsLoadingProfiles(false));
     }, []);
-    
+
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -106,7 +106,7 @@ export default function Settings() {
         }
     }
 
-    function handleAddProfile(e) {
+    async function handleAddProfile(e) {
         e.preventDefault();
         const trimmed = newProfileName.trim();
 
@@ -115,9 +115,21 @@ export default function Settings() {
             return;
         }
 
-        setProfiles((prev) => [...prev, { id: Date.now(), name: trimmed, avatar_url: null }]);
-        setNewProfileName('');
-        showToast(`Profil "${trimmed}" ajouté`, 'success');
+        const existingProfile = profiles.find((n) => n.name === trimmed);
+
+        if (existingProfile) {
+            showToast(`Le profil "${existingProfile.name}" existe déjà`, 'error');
+            return;
+        }
+
+        try {
+            const created = await apiCreateProfile(trimmed);
+            setProfiles((prev) => [...prev, created]);
+            setNewProfileName('');
+            showToast(`Profil "${trimmed}" ajouté`, 'success');
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
     }
 
     return (

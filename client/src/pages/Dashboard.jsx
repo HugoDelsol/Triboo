@@ -50,6 +50,22 @@ export default function Dashboard() {
         }
     }
 
+    async function deleteTask(params) {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    async function editTask(params) {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
     const grouped = groupTasksBySection(tasks);
 
     if (isLoading) return <p className="empty-state">Chargement...</p>;
@@ -80,7 +96,7 @@ export default function Dashboard() {
                         <EmptyStateCard message="Rien en retard, bravo !" />
                     )}
                     {sortByPriority(grouped.enRetard).map((task) => (
-                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} />
+                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} onDelete={deleteTask} onEdit={editTask} />
                     ))}
                 </section>
 

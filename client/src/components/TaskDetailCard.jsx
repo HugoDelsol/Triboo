@@ -40,7 +40,7 @@ export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
                                     onToggle(task.id, task.title);
                                 }}
                             >
-                                <Check size={14} /> {isDone ? 'Réouvrir' : 'Terminer'}
+                                <CheckCircle size={14} /> {isDone ? 'Réouvrir' : 'Terminer'}
                             </button>
                             <button
                                 className="card-menu-item"
