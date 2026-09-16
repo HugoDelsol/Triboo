@@ -36,7 +36,7 @@ textarea.add-item-input {
     gap: 8px;
 }
 
-.checkboxDiv{
+.checkboxDiv {
     margin: 10px 0 0 0;
 }
 
@@ -79,4 +79,11 @@ textarea.add-item-input {
     border: solid var(--bg);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+}
+
+.recurrence-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { fetchCategories } from '../api/categories';
-import { createTask as apiCreateTask } from '../api/tasks';
+import { createTask as apiCreateTask, createRecurringTask as apiCreateRecurringTask } from '../api/tasks';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import './CreateTask.css';
@@ -18,6 +18,13 @@ const PRIORITY_OPTIONS = [
     { value: 'urgent', label: 'Urgent' },
     { value: 'important', label: 'Important' },
     { value: 'faible', label: 'Faible' },
+];
+
+const RECURRENCE_OPTIONS = [
+    { value: 'daily', label: 'Chaque jour' },
+    { value: 'weekly', label: 'Chaque semaine' },
+    { value: 'monthly', label: 'Chaque mois' },
+    { value: 'yearly', label: 'Chaque année' },
 ];
 
 export default function CreateTask() {
@@ -38,15 +45,16 @@ export default function CreateTask() {
     const [location, setLocation] = useState('');
     const [isShared, setIsShared] = useState(true);
     const [wantsReminder, setWantsReminder] = useState(true);
+    const [isRecurring, setIsRecurring] = useState(false);
+    const [recurrenceType, setRecurrenceType] = useState('monthly');
+    const [recurrenceInterval, setRecurrenceInterval] = useState(1);
 
     const isDateRequired = type === 'task' || type === 'appointment';
 
     useEffect(() => {
         fetchCategories()
             .then(setCategories)
-            .catch((err) => {
-                setError('Une erreur est survenue, réessaie plus tard.')
-            })
+            .catch(() => setError('Une erreur est survenue, réessaie plus tard.'))
             .finally(() => setIsLoading(false));
     }, []);
 
@@ -64,26 +72,42 @@ export default function CreateTask() {
             return;
         }
 
-        const newTask = {
-            type,
-            title: trimmedTitle,
-            description: description.trim() || null,
-            category_id: selectedCategoryId ?? null,
-            due_date: dueDate || null,
-            due_time: type === 'appointment' ? dueTime || null : null,
-            location: type === 'appointment' ? location.trim() || null : null,
-            priority,
-            status: 'pending',
-            is_shared: isShared,
-            wants_reminder: wantsReminder,
-        };
-
         try {
-            await apiCreateTask(newTask);
-            showToast(`Tâche "${newTask.title}" ajoutée`, 'success');
+            if (isRecurring) {
+                const [, month, day] = dueDate.split('-').map(Number);
+
+                
+                await apiCreateRecurringTask({
+                    title: trimmedTitle,
+                    description: description.trim() || null,
+                    category_id: selectedCategoryId,
+                    due_date: dueDate,
+                    recurrence_type: recurrenceType,
+                    recurrence_interval: recurrenceInterval,
+                    recurrence_day: day,
+                    recurrence_month: recurrenceType === 'yearly' ? month : null,
+                    is_shared: isShared,
+                    wants_reminder: wantsReminder,
+                });
+            } else {
+                await apiCreateTask({
+                    type,
+                    title: trimmedTitle,
+                    description: description.trim() || null,
+                    category_id: selectedCategoryId,
+                    due_date: dueDate || null,
+                    due_time: type === 'appointment' ? dueTime || null : null,
+                    location: type === 'appointment' ? location.trim() || null : null,
+                    priority,
+                    is_shared: isShared,
+                    wants_reminder: wantsReminder,
+                });
+            }
+
+            showToast(`${TYPE_LABELS[type]} créé${type === 'task' ? 'e' : ''}`, 'success');
             navigate('/');
         } catch (err) {
-            showToast(err.message, 'error');
+            showToast("Une erreur est survenue", 'error');
         }
     }
 
@@ -97,7 +121,7 @@ export default function CreateTask() {
                     <ArrowLeft size={18} />
                 </button>
 
-                <h1 className="create-task-title">{TYPE_LABELS[type] === "Tâche" ? "Nouvelle" : "Nouveau"} {TYPE_LABELS[type]?.toLowerCase()}</h1>
+                <h1 className="create-task-title">{TYPE_LABELS[type] === 'Tâche' ? 'Nouvelle' : 'Nouveau'} {TYPE_LABELS[type]?.toLowerCase()}</h1>
 
                 <form onSubmit={handleSubmit} className="create-task-form">
                     <input
@@ -160,7 +184,6 @@ export default function CreateTask() {
 
                     <div className="field-label">Catégorie</div>
                     <div className="chip-row">
-
                         {categories.map((cat) => (
                             <button
                                 type="button"
@@ -174,7 +197,7 @@ export default function CreateTask() {
                         ))}
                     </div>
 
-                    <div className='checkboxDiv'>
+                    <div className="checkboxDiv">
                         <label className="checkbox-field">
                             <input
                                 type="checkbox"
@@ -194,8 +217,38 @@ export default function CreateTask() {
                                 Ne pas me rappeler
                             </label>
                         )}
-                    </div>
 
+                        {isDateRequired && (
+                            <>
+                                <label className="checkbox-field">
+                                    <input
+                                        type="checkbox"
+                                        checked={isRecurring}
+                                        onChange={(e) => setIsRecurring(e.target.checked)}
+                                    />
+                                    Rendre récurrente
+                                </label>
+
+                                {isRecurring && (
+                                    <div className="recurrence-fields">
+                                        <div className="field-label">Fréquence</div>
+                                        <div className="chip-row">
+                                            {RECURRENCE_OPTIONS.map((opt) => (
+                                                <button
+                                                    type="button"
+                                                    key={opt.value}
+                                                    className={`filter-chip${recurrenceType === opt.value ? ' active' : ''}`}
+                                                    onClick={() => setRecurrenceType(opt.value)}
+                                                >
+                                                    {opt.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
 
                     <button type="submit" className="submit-button">Créer</button>
                 </form>

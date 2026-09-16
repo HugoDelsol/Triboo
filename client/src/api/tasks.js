@@ -25,6 +25,20 @@ export async function createTask(taskData) {
     return response.json();
 }
 
+export async function createRecurringTask(taskData) {
+    const response = await fetch(`${API_URL}/tasks/recurring`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskData),
+    });
+    console.log("testtttt")
+    if (!response.ok) {
+        throw new Error('Impossible de créer la tâche');
+    }
+    return response.json();
+}
+
 export async function updateTaskStatus(taskId, status) {
     const response = await fetch(`${API_URL}/tasks/${taskId}`, {
         method: 'PUT',

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { differenceInCalendarDays, isPast, isToday, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Settings, Check, Pencil, Trash2 } from 'lucide-react';
+import { Settings, Check, Pencil, Trash2, Repeat } from 'lucide-react';
 import { useTaskDetail } from '../context/TaskDetailContext';
 import './TaskCard.css';
 
@@ -51,6 +51,11 @@ export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
                     )}
                     {isOverdue && <span className="overdue-tag">Retard {daysLate} j</span>}
                     {!isOverdue && dateLabel && <span className="time-tag">{dateLabel}</span>}
+                    {task.recurrence_type && (
+                        <span className="detail-info">
+                            <Repeat size={14} /> 
+                        </span>
+                    )}
                 </div>
             </div>
 

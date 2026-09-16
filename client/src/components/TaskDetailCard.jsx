@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { Paperclip, Users, Clock, MapPin, Settings, CheckCircle, Pencil, Trash2, Calendar } from 'lucide-react';
+import { Paperclip, Users, Clock, MapPin, Settings, CheckCircle, Pencil, Trash2, Calendar, Repeat } from 'lucide-react';
 import './TaskDetailCard.css';
 
 export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
@@ -11,6 +11,13 @@ export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
     const dueDate = task.due_date ? new Date(task.due_date) : null;
     const dateLabel = dueDate ? format(dueDate, 'EEEE d MMMM', { locale: fr }) : null;
     const shortTime = task.due_time?.split(':').slice(0, 2).join(':');
+
+    const RECURRENCE_LABELS = {
+        daily: 'Tous les jours',
+        weekly: 'Toutes les semaines',
+        monthly: 'Tous les mois',
+        yearly: 'Tous les ans',
+    };
 
     return (
         <div className={`detail-card p-${task.priority}${isDone ? ' done' : ''}`}>
@@ -79,6 +86,12 @@ export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
                     )}
                     {task.location && (
                         <span className="detail-info"><MapPin size={14} /> {task.location}</span>
+                    )}
+
+                    {task.recurrence_type && (
+                        <span className="detail-info">
+                            <Repeat size={14} /> {RECURRENCE_LABELS[task.recurrence_type]}
+                        </span>
                     )}
                 </div>
             )}

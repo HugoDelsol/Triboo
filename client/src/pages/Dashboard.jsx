@@ -1,6 +1,6 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import { fetchTasks, updateTaskStatus } from '../api/tasks';
+import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask } from '../api/tasks';
 import { groupTasksBySection } from '../utils/groupTasksBySection';
 import { sortByPriority } from '../utils/sortByPriority';
 import TaskCard from '../components/TaskCard';
@@ -50,19 +50,27 @@ export default function Dashboard() {
         }
     }
 
-    async function deleteTask(params) {
+    async function deleteTask(taskId, taskTitle) {
+        const confirmed = await confirm(`Supprimer la tâche "${taskTitle}" ?`);
+        if (!confirmed) return;
+
         try {
-            
+            await apiDeleteTask(taskId);
+            setTasks((prev) => prev.filter((task) => task.id !== taskId));
+            showToast(`"${taskTitle}" supprimée`, 'success');
         } catch (error) {
-            
+            console.error(error);
+            showToast('Impossible de supprimer la tâche', 'error');
         }
     }
 
-    async function editTask(params) {
+    async function editTask() {
+
+        console.log("test")
         try {
-            
+
         } catch (error) {
-            
+
         }
     }
 
@@ -109,7 +117,7 @@ export default function Dashboard() {
                         <EmptyStateCard message="Rien de prévu aujourd'hui." />
                     )}
                     {sortByPriority(grouped.aujourdhui).map((task) => (
-                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} />
+                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} onDelete={deleteTask} onEdit={editTask} />
                     ))}
                 </section>
 
@@ -122,7 +130,7 @@ export default function Dashboard() {
                         <EmptyStateCard message="Rien de prévu cette semaine." />
                     )}
                     {sortByPriority(grouped.cetteSemaine).map((task) => (
-                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} />
+                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} onDelete={deleteTask} onEdit={editTask} />
                     ))}
                 </section>
 
@@ -135,7 +143,7 @@ export default function Dashboard() {
                         <EmptyStateCard message="Aucun mémo pour l'instant." />
                     )}
                     {sortByPriority(grouped.memos).map((task) => (
-                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} />
+                        <TaskCard key={task.id} task={task} onToggle={handleToggleTask} onDelete={deleteTask} onEdit={editTask} />
                     ))}
                 </section>
 

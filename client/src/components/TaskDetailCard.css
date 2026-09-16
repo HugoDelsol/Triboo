@@ -44,7 +44,7 @@
 .detail-header-text {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 4px;    
 }
 
 .detail-header-text .tag {
@@ -67,6 +67,10 @@
     font-weight: 600;
     font-size: 18px;
     color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 220px;
 }
 
 /* Menu (roue crantée) */

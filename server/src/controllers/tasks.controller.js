@@ -5,10 +5,12 @@ import {
     insertTask,
     updateTaskStatus,
     deleteTask,
+    findTaskTemplateId
 } from '../repositories/task.repository.js';
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
+import { deleteTemplateAndOccurrences } from '../repositories/recurringTemplate.repository.js';
 
 export async function getAllTasks(req, res) {
     try {
@@ -84,6 +86,13 @@ export async function updateTask(req, res) {
 
 export async function removeTask(req, res) {
     try {
+        const templateId = await findTaskTemplateId(req.params.id, req.householdId);
+
+        if (templateId) {
+            await deleteTemplateAndOccurrences(templateId, req.householdId);
+            return res.json({ message: 'Tâche récurrente et toutes ses occurrences supprimées' });
+        }
+
         const deleted = await deleteTask(req.params.id, req.householdId);
         if (!deleted) return res.status(404).json({ message: 'Tâche introuvable' });
         res.json({ message: 'Tâche supprimée' });

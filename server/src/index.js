@@ -4,6 +4,7 @@ import express from 'express';
 import cors from 'cors';
 
 import { startReminderCron } from './jobs/sendReminders.js';
+import { startRecurringTaskCron } from './jobs/generateRecurringTasks.js';
 
 import { sessionMiddleware } from './config/session.js';
 import { requireAuth } from './middlewares/requireAuth.js';
@@ -41,3 +42,4 @@ app.listen(PORT, () => {
 });
 
 startReminderCron();
+startRecurringTaskCron();
