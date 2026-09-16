@@ -114,3 +114,25 @@
 .settings-logout:hover {
     opacity: 0.8;
 }
+
+.settings-notifications {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--important);
+    background-color: transparent;
+    border: 1px solid var(--important);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.settings-notifications:hover {
+    opacity: 0.8;
+}

@@ -3,6 +3,8 @@ import './loadEnv.js';
 import express from 'express';
 import cors from 'cors';
 
+import { startReminderCron } from './jobs/sendReminders.js';
+
 import { sessionMiddleware } from './config/session.js';
 import { requireAuth } from './middlewares/requireAuth.js';
 
@@ -11,6 +13,7 @@ import householdRouter from './routes/household.routes.js';
 import profilesRouter from './routes/profiles.routes.js';
 import categoriesRouter from './routes/categories.routes.js';
 import listsRouter from './routes/lists.routes.js';
+import pushRouter from './routes/push.routes.js';
 
 const app = express();
 app.use(cors({
@@ -25,6 +28,7 @@ app.use('/api/households', householdRouter);
 app.use('/api/profiles', requireAuth, profilesRouter);
 app.use('/api/categories', requireAuth, categoriesRouter);
 app.use('/api/lists', requireAuth, listsRouter);
+app.use('/api/push', requireAuth, pushRouter);
 
 app.use((err, req, res, next) => {
     console.error('Erreur non gérée:', err);
@@ -35,3 +39,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+
+startReminderCron();

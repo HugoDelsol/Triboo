@@ -13,7 +13,9 @@
         "express-mysql-session": "^3.0.3",
         "express-session": "^1.19.0",
         "express-validator": "^7.3.2",
-        "mysql2": "^3.24.4"
+        "mysql2": "^3.24.4",
+        "node-cron": "^4.6.0",
+        "web-push": "^3.6.7"
     },
     "overrides": {
         "express-mysql-session": {

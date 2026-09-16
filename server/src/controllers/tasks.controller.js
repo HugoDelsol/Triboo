@@ -6,6 +6,9 @@ import {
     updateTaskStatus,
     deleteTask,
 } from '../repositories/task.repository.js';
+import { insertReminder } from '../repositories/reminder.repository.js';
+import { findProfilesByHousehold } from '../repositories/profile.repository.js';
+import { buildReminderDates } from '../utils/reminderDates.js';
 
 export async function getAllTasks(req, res) {
     try {
@@ -43,7 +46,24 @@ export async function createTask(req, res) {
             ...req.body,
             household_id: req.householdId,
             created_by_profile_id: req.session.profileId,
+            is_shared: req.body.is_shared ?? true,
         });
+
+        if (req.body.due_date) {
+            const { dayOf, the24hBefore } = buildReminderDates(req.body.due_date, req.body.due_time);
+
+            const targetProfileIds = req.body.is_shared
+                ? (await findProfilesByHousehold(req.householdId)).map((p) => p.id)
+                : [req.session.profileId];
+
+            for (const profileId of targetProfileIds) {
+                await insertReminder(id, profileId, dayOf);
+                if (req.body.wants_reminder) {
+                    await insertReminder(id, profileId, the24hBefore);
+                }
+            }
+        }
+
         res.status(201).json({ id, message: 'Tâche créée' });
     } catch (error) {
         console.error('Erreur createTask:', error);

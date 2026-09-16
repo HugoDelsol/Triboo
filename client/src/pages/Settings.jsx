@@ -15,6 +15,7 @@ import {
     createProfile as apiCreateProfile,
     deleteProfile as apiDeleteProfile,
 } from '../api/profiles';
+import { saveSubscription } from '../api/push';
 
 import './Settings.css';
 
@@ -25,6 +26,28 @@ export default function Settings() {
     const [isLoadingCategories, setIsLoadingCategories] = useState(true);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newProfileName, setNewProfileName] = useState('');
+
+    async function handleEnableNotifications() {
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') {
+                showToast('Notifications refusées', 'error');
+                return;
+            }
+
+            const registration = await navigator.serviceWorker.ready;
+            const subscription = await registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
+            });
+
+            await saveSubscription(subscription);
+            showToast('Notifications activées', 'success');
+        } catch (err) {
+            console.log(err)
+            showToast("Impossible d'activer les notifications", 'error');
+        }
+    }
 
     useEffect(() => {
         fetchCategories()
@@ -204,6 +227,12 @@ export default function Settings() {
                     </form>
                 </section>
 
+                <section className="settings-section">
+                    <button type="button" className="settings-notifications" onClick={handleEnableNotifications}>
+                        Activer les notifications
+                    </button>
+                </section>
+                
                 <section className="settings-section">
                     <button type="button" className="settings-logout" onClick={handleLogout}>
                         <LogOut size={18} />
