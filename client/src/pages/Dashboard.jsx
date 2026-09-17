@@ -1,6 +1,7 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask } from '../api/tasks';
+import { useNavigate } from 'react-router-dom';
+import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask, updateTask as apiUpdateTask } from '../api/tasks';
 import { groupTasksBySection } from '../utils/groupTasksBySection';
 import { sortByPriority } from '../utils/sortByPriority';
 import TaskCard from '../components/TaskCard';
@@ -15,6 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
+    const navigate = useNavigate();
     const { householdName, profileName } = useAuth();
     const { showToast } = useToast();
     const { confirm } = useConfirm();
@@ -64,11 +66,11 @@ export default function Dashboard() {
         }
     }
 
-    async function editTask() {
+    async function editTask(taskId) {
 
         console.log("test")
         try {
-
+            navigate(`/modifier/${taskId}`);
         } catch (error) {
 
         }

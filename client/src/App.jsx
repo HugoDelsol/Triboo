@@ -19,6 +19,7 @@ import Signup from './pages/Signup';
 import SelectProfile from './components/SelectProfile';
 import ProfileRequiredRoute from './components/ProfileRequiredRoute';
 import { TaskDetailProvider } from './context/TaskDetailContext';
+import UpdateTask from './pages/updateTask';
 import Logout from './components/Logout';
 import './index.css';
 
@@ -42,6 +43,7 @@ function App() {
                   <Route path="/listes/nouvelle" element={<ProfileRequiredRoute><CreateList /></ProfileRequiredRoute>} />
                   <Route path="/listes/:listId" element={<ProfileRequiredRoute><ListDetail /></ProfileRequiredRoute>} />
                   <Route path="/creer/:type" element={<ProfileRequiredRoute><CreateTask /></ProfileRequiredRoute>} />
+                  <Route path="/modifier/:taskId" element={<ProfileRequiredRoute><UpdateTask /></ProfileRequiredRoute>} />
                   <Route path="/reglages" element={<ProfileRequiredRoute><Settings /></ProfileRequiredRoute>} />
                   <Route path="/logout" element={<Logout />} />
                 </Route>

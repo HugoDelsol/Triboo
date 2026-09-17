@@ -64,15 +64,6 @@ export default function FilterSheet({ filters, onChange, onClose }) {
                         onClick={() => updateFilter('category', 'all')}
                         label="Toutes"
                     />
-                    {/* {mockCategories.map((cat) => (
-                        <FilterChip
-                            key={cat.name}
-                            active={filters.category === cat.name}
-                            onClick={() => updateFilter('category', cat.name)}
-                            label={cat.name}
-                            dotColor={cat.color}
-                        />
-                    ))} */}
                 </FilterGroup>
 
                 <FilterGroup label="Trier par">
