@@ -43,19 +43,18 @@ export async function createRecurringTask(taskData) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(taskData),
     });
-    console.log("testtttt")
     if (!response.ok) {
         throw new Error('Impossible de créer la tâche');
     }
     return response.json();
 }
 
-export async function updateTask(data) {
-    const response = await fetch(`${API_URL}/tasks/${data.id}`, {
+export async function editTask(data) {
+    const response = await fetch(`${API_URL}/tasks/editTask/${data.id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify(data),
     });
     if (!response.ok) {
         throw new Error('Impossible de mettre à jour la tâche');
@@ -63,12 +62,12 @@ export async function updateTask(data) {
     return response.json();
 }
 
-export async function updateRecurringTask(data) {
-    const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+export async function editRecurringTask(data) {
+    const response = await fetch(`${API_URL}/tasks/editTaskRecurring/${data.id}`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify(data),
     });
     if (!response.ok) {
         throw new Error('Impossible de mettre à jour la tâche');

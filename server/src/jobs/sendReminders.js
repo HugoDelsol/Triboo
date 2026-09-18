@@ -5,7 +5,6 @@ import { findSubscriptionsByProfileId } from '../repositories/pushSubscription.r
 import { sendPushNotification } from '../utils/sendPush.js';
 
 async function processReminders() {
-    console.log("testReminderCronJob");
     const reminders = await findPendingReminders();
 
 

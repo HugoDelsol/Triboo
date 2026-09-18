@@ -1,7 +1,7 @@
 // src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask, updateTask as apiUpdateTask } from '../api/tasks';
+import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask } from '../api/tasks';
 import { groupTasksBySection } from '../utils/groupTasksBySection';
 import { sortByPriority } from '../utils/sortByPriority';
 import TaskCard from '../components/TaskCard';
@@ -13,10 +13,12 @@ import EmptyStateCard from '../components/EmptyStateCard';
 import { useToast } from '../context/ToastContext';
 import { useConfirm } from '../context/ConfirmContext';
 import { useAuth } from '../context/AuthContext';
+import { useTaskDetail } from '../context/TaskDetailContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
     const navigate = useNavigate();
+    const { closeTaskDetail } = useTaskDetail();
     const { householdName, profileName } = useAuth();
     const { showToast } = useToast();
     const { confirm } = useConfirm();
@@ -67,12 +69,11 @@ export default function Dashboard() {
     }
 
     async function editTask(taskId) {
-
-        console.log("test")
         try {
+            closeTaskDetail()
             navigate(`/modifier/${taskId}`);
         } catch (error) {
-
+            console.log("dashboard", error)
         }
     }
 

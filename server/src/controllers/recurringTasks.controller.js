@@ -1,12 +1,12 @@
 // server/src/controllers/recurringTasks.controller.js
-import { insertTemplate } from '../repositories/recurringTemplate.repository.js';
-import { insertTask } from '../repositories/task.repository.js';
+import { insertTemplate, updateTemplateDetails } from '../repositories/recurringTemplate.repository.js';
+import { insertTask, findTaskTemplateId, updateTaskDetails } from '../repositories/task.repository.js';
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
 
 export async function createRecurringTask(req, res) {
-    
+
     const {
         title, description, category_id, due_date,
         recurrence_type, recurrence_interval, recurrence_day, recurrence_month,
@@ -70,6 +70,27 @@ export async function createRecurringTask(req, res) {
         res.status(201).json({ templateId, taskId, message: 'Tâche récurrente créée' });
     } catch (error) {
         console.error('Erreur createRecurringTask:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
+    }
+}
+
+export async function editTaskRecurring(req, res) {
+    try {
+        const templateId = await findTaskTemplateId(req.params.id, req.householdId);
+        if (!templateId) return res.status(404).json({ message: 'Template introuvable' });
+
+        const templateUpdated = await updateTemplateDetails(templateId, req.householdId, req.body);
+        if (!templateUpdated) return res.status(404).json({ message: 'Template introuvable' });
+
+        const taskUpdated = await updateTaskDetails(req.params.id, req.householdId, {
+            ...req.body,
+            priority: "important",
+        });
+        if (!taskUpdated) return res.status(404).json({ message: 'Tâche introuvable' });
+
+        res.json({ message: 'Tâche récurrente mise à jour' });
+    } catch (error) {
+        console.error('Erreur editTaskRecurring:', error);
         res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }

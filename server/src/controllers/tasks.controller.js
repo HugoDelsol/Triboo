@@ -5,12 +5,13 @@ import {
     insertTask,
     updateTaskStatus,
     deleteTask,
-    findTaskTemplateId
+    findTaskTemplateId,
+    updateTaskDetails,
 } from '../repositories/task.repository.js';
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
-import { deleteTemplateAndOccurrences } from '../repositories/recurringTemplate.repository.js';
+import { deleteTemplateAndOccurrences,updateTemplateDetails } from '../repositories/recurringTemplate.repository.js';
 
 export async function getAllTasks(req, res) {
     try {
@@ -80,6 +81,17 @@ export async function updateTask(req, res) {
         res.json({ message: 'Tâche mise à jour' });
     } catch (error) {
         console.error('Erreur updateTask:', error);
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
+    }
+}
+
+export async function editTask(req, res) {
+    try {
+        const updated = await updateTaskDetails(req.params.id, req.householdId, req.body);
+        if (!updated) return res.status(404).json({ message: 'Tâche introuvable' });
+        res.json({ message: 'Tâche mise à jour' });
+    } catch (error) {
+        console.error('Erreur editTask:', error);
         res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }

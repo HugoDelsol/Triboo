@@ -62,6 +62,28 @@ export async function updateTaskStatus(id, householdId, status) {
     return result.affectedRows > 0;
 }
 
+export async function updateTaskDetails(id, householdId, data) {
+    const [result] = await pool.query(
+        `UPDATE tasks
+     SET title = ?, description = ?, category_id = ?, due_date = ?, due_time = ?, location = ?, priority = ?, is_shared = ?, wants_reminder = ?
+     WHERE id = ? AND household_id = ?`,
+        [
+            data.title,
+            data.description,           
+            data.category_id,
+            data.due_date,
+            data.due_time,
+            data.location,
+            data.priority,
+            data.is_shared,
+            data.wants_reminder,
+            id,
+            householdId,
+        ]
+    );
+    return result.affectedRows > 0;
+}
+
 export async function deleteTask(id, householdId) {
     const [result] = await pool.query(
         `DELETE FROM tasks WHERE id = ? AND household_id = ?`,
@@ -71,9 +93,9 @@ export async function deleteTask(id, householdId) {
 }
 
 export async function findTaskTemplateId(id, householdId) {
-  const [rows] = await pool.query(
-    `SELECT template_id FROM tasks WHERE id = ? AND household_id = ?`,
-    [id, householdId]
-  );
-  return rows[0]?.template_id ?? null;
+    const [rows] = await pool.query(
+        `SELECT template_id FROM tasks WHERE id = ? AND household_id = ?`,
+        [id, householdId]
+    );
+    return rows[0]?.template_id ?? null;
 }

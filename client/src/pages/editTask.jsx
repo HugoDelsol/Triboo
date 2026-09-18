@@ -1,10 +1,10 @@
-// src/pages/CreateTask.jsx
+// src/pages/EditTask.jsx
 import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { fetchCategories } from '../api/categories';
-import { fetchTaskById, updateTask, updateRecurringTask } from '../api/tasks';
-import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { fetchTaskById, editTask, editRecurringTask } from '../api/tasks';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import './CreateTask.css';
 
@@ -27,29 +27,21 @@ const RECURRENCE_OPTIONS = [
     { value: 'yearly', label: 'Chaque année' },
 ];
 
-export default function CreateTask() {
+const EDIT_TITLE_LABEL = {
+    task: 'la tâche',
+    appointment: 'le rendez-vous',
+    memo: 'le mémo',
+};
+
+export default function EditTask() {
     const { taskId } = useParams();
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const prefilledDate = searchParams.get('date') ?? '';
     const { showToast } = useToast();
     const [error, setError] = useState(null);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
     const [dataTask, setDataTask] = useState({});
     const [categories, setCategories] = useState([]);
-    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [priority, setPriority] = useState('important');
-    const [dueDate, setDueDate] = useState(prefilledDate);
-    const [dueTime, setDueTime] = useState('');
-    const [location, setLocation] = useState('');
-    const [isShared, setIsShared] = useState(true);
-    const [wantsReminder, setWantsReminder] = useState(true);
     const [isRecurring, setIsRecurring] = useState(false);
-    const [recurrenceType, setRecurrenceType] = useState('monthly');
-
-    const [recurrenceInterval, setRecurrenceInterval] = useState(1);
 
     useEffect(() => {
         fetchCategories()
@@ -61,66 +53,66 @@ export default function CreateTask() {
     useEffect(() => {
         fetchTaskById(taskId)
             .then((data) => {
-                setDataTask(data),
-                    setIsRecurring(!!data.recurrence_interval)
+                setDataTask(data);
+                setIsRecurring(!!data.recurrence_interval);
             })
             .catch(() => setError('Une erreur est survenue, réessaie plus tard.'))
             .finally(() => setIsLoading(false));
     }, []);
 
-    console.log("testttttt", dataTask)
-
-
     async function handleSubmit(e) {
         e.preventDefault();
-        const trimmedTitle = title.trim();
+        const trimmedTitle = dataTask.title.trim();
 
         if (!trimmedTitle) {
             showToast('Le titre ne peut pas être vide', 'error');
             return;
         }
 
-        if ((dataTask.type === "task" || dataTask.type === "appointment") && !dueDate) {
-            showToast('Une date est requise pour ce type', 'error');
+        if ((dataTask.type === "task" || dataTask.type === "appointment") && !dataTask.due_date) {
+            showToast('Une date est requise', 'error');
             return;
         }
 
         try {
             if (isRecurring) {
-                const [month, day] = dueDate.split('-').map(Number);
+                const cleanDate = dataTask.due_date.split('T')[0];
+                const [, month, day] = cleanDate.split('-').map(Number);
 
-                await updateRecurringTask({
+                await editRecurringTask({
                     id: dataTask.id,
                     title: trimmedTitle,
-                    description: description.trim() || null,
-                    category_id: selectedCategoryId,
-                    due_date: dueDate,
-                    recurrence_type: recurrenceType,
-                    recurrence_interval: recurrenceInterval,
+                    description: dataTask.description || null,
+                    category_id: dataTask.category_id,
+                    due_date: dataTask.due_date.split('T').slice(0, 1),
+                    recurrence_type: dataTask.recurrence_type,
+                    recurrence_interval: dataTask.recurrence_interval,
                     recurrence_day: day,
-                    recurrence_month: recurrenceType === 'yearly' ? month : null,
-                    is_shared: isShared,
-                    wants_reminder: wantsReminder,
+                    recurrence_month: dataTask.recurrence_type === 'yearly' ? month : null,
+                    is_shared: dataTask.is_shared,
+                    wants_reminder: dataTask.wants_reminder,
                 });
             } else {
-                await updateTask({
+                await editTask({
                     id: dataTask.id,
-                    type,
+                    type: dataTask.type,
                     title: trimmedTitle,
-                    description: description.trim() || null,
-                    category_id: selectedCategoryId,
-                    due_date: dueDate || null,
-                    due_time: "",
-                    location: "",
-                    priority,
-                    is_shared: isShared,
-                    wants_reminder: wantsReminder,
+                    description: dataTask.description || null,
+                    category_id: dataTask.category_id,
+                    due_date: dataTask.due_date.split('T').slice(0, 1),
+                    due_time: dataTask.due_time || null,
+                    location: dataTask.location || null,
+                    priority: dataTask.priority,
+                    is_shared: dataTask.is_shared,
+                    wants_reminder: dataTask.wants_reminder,
                 });
             }
 
-            showToast(`${TYPE_LABELS[dataTask.type]} modifié${type === 'task' ? 'e' : ''}`, 'success');
+
+            showToast(`${TYPE_LABELS[dataTask.type]} modifié${dataTask.type === 'task' ? 'e' : ''}`, 'success');
             navigate('/');
         } catch (err) {
+            console.log(err)
             showToast("Une erreur est survenue", 'error');
         }
     }
@@ -135,14 +127,14 @@ export default function CreateTask() {
                     <ArrowLeft size={18} />
                 </button>
 
-                <h1 className="create-task-title">Modifier la tache</h1>
+                <h1 className="create-task-title">Modifier {EDIT_TITLE_LABEL[dataTask.type]}</h1>
 
                 <form onSubmit={handleSubmit} className="create-task-form">
                     <input
                         type="text"
                         className="add-item-input"
                         placeholder="Titre"
-                        value={dataTask.title}
+                        value={dataTask.title ?? ''}
                         onChange={(e) => setDataTask(prev => ({ ...prev, title: e.target.value }))}
                         autoFocus
                     />
@@ -150,12 +142,12 @@ export default function CreateTask() {
                     <textarea
                         className="add-item-input"
                         placeholder="Description (optionnel)"
-                        value={dataTask.description}
+                        value={dataTask.description ?? ''}
                         onChange={(e) => setDataTask(prev => ({ ...prev, description: e.target.value }))}
                         rows={3}
                     />
 
-                    {dataTask.due_date && (
+                    {(dataTask.type === "task" || dataTask.type === 'appointment') && (
                         <input
                             type="date"
                             className="add-item-input"
@@ -169,14 +161,14 @@ export default function CreateTask() {
                             <input
                                 type="time"
                                 className="add-item-input"
-                                value={dataTask.due_time}
+                                value={dataTask.due_time ?? ''}
                                 onChange={(e) => setDataTask(prev => ({ ...prev, due_time: e.target.value }))}
                             />
                             <input
                                 type="text"
                                 className="add-item-input"
                                 placeholder="Lieu (optionnel)"
-                                value={dataTask.location}
+                                value={dataTask.location ?? ''}
                                 onChange={(e) => setDataTask(prev => ({ ...prev, location: e.target.value }))}
                             />
                         </>
@@ -238,7 +230,10 @@ export default function CreateTask() {
                                     <input
                                         type="checkbox"
                                         checked={isRecurring}
-                                        onChange={(e) => setIsRecurring(e.target.checked)}
+                                        onChange={(e) => {
+                                            setIsRecurring(e.target.checked);
+                                            setDataTask(prev => ({ ...prev, recurrence_interval: e.target.checked ? 1 : 0 }));
+                                        }}
                                     />
                                     Rendre récurrente
                                 </label>
@@ -264,7 +259,7 @@ export default function CreateTask() {
                         )}
                     </div>
 
-                    <button type="submit" className="submit-button">Créer</button>
+                    <button type="submit" className="submit-button">Modifier</button>
                 </form>
             </div>
         </div>

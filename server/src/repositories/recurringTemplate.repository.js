@@ -34,6 +34,27 @@ export async function insertTemplate(data) {
     return result.insertId;
 }
 
+export async function updateTemplateDetails(templateId, householdId, data) {
+    const [result] = await pool.query(
+        `UPDATE recurring_task_templates
+     SET title = ?, description = ?, category_id = ?, recurrence_type = ?, recurrence_interval = ?, recurrence_day = ?, recurrence_month = ?, wants_reminder = ?
+     WHERE id = ? AND household_id = ?`,
+        [
+            data.title,
+            data.description,
+            data.category_id,
+            data.recurrence_type,
+            data.recurrence_interval,
+            data.recurrence_day,
+            data.recurrence_month,
+            data.wants_reminder,
+            templateId,
+            householdId,
+        ]
+    );
+    return result.affectedRows > 0;
+}
+
 export async function deleteTemplateAndOccurrences(templateId, householdId) {
     await pool.query(
         `DELETE FROM tasks WHERE template_id = ? AND household_id = ?`,
