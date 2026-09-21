@@ -24,10 +24,3 @@ export async function findHouseholdById(id) {
     );
     return rows[0] || null;
 }
-
-export async function updateHouseholdPassword(id, hashedPassword) {
-    await pool.query(
-        `UPDATE household SET password = ? WHERE id = ?`,
-        [hashedPassword, id]
-    );
-}

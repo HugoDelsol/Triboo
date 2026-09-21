@@ -11,7 +11,8 @@ import {
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
-import { deleteTemplateAndOccurrences,updateTemplateDetails } from '../repositories/recurringTemplate.repository.js';
+import { deleteTemplateAndOccurrences, updateTemplateDetails } from '../repositories/recurringTemplate.repository.js';
+import { findCategoryById } from '../repositories/category.repository.js';
 
 export async function getAllTasks(req, res) {
     try {
@@ -43,6 +44,10 @@ export async function createTask(req, res) {
     if (!type) {
         return res.status(400).json({ message: 'Le type est requis' });
     }
+    if (req.body.category_id) {
+        const category = await findCategoryById(req.body.category_id, req.householdId);
+        if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
+    }
 
     try {
         const id = await insertTask({
@@ -50,6 +55,8 @@ export async function createTask(req, res) {
             household_id: req.householdId,
             created_by_profile_id: req.session.profileId,
             is_shared: req.body.is_shared ?? true,
+            template_id: null,
+            period_key: null,
         });
 
         if (req.body.due_date) {
@@ -75,6 +82,7 @@ export async function createTask(req, res) {
 }
 
 export async function updateTask(req, res) {
+    
     try {
         const updated = await updateTaskStatus(req.params.id, req.householdId, req.body.status);
         if (!updated) return res.status(404).json({ message: 'Tâche introuvable' });
@@ -86,6 +94,11 @@ export async function updateTask(req, res) {
 }
 
 export async function editTask(req, res) {
+
+    if (req.body.category_id) {
+        const category = await findCategoryById(req.body.category_id, req.householdId);
+        if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
+    }
     try {
         const updated = await updateTaskDetails(req.params.id, req.householdId, req.body);
         if (!updated) return res.status(404).json({ message: 'Tâche introuvable' });
