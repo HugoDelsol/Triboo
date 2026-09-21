@@ -51,7 +51,7 @@ export async function createRecurringTask(req, res) {
             template_id: templateId,
             period_key: due_date,
             created_by_profile_id: req.session.profileId,
-            type: type,
+            type: 'task',
             title: title.trim(),
             description: description?.trim() || null,
             due_date,

@@ -16,6 +16,7 @@ import {
     deleteProfile as apiDeleteProfile,
 } from '../api/profiles';
 import { saveSubscription } from '../api/push';
+import { urlBase64ToUint8Array } from '../utils/urlBase64ToUint8Array';
 
 import './Settings.css';
 
@@ -38,7 +39,7 @@ export default function Settings() {
             const registration = await navigator.serviceWorker.ready;
             const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
+                applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
             });
 
             await saveSubscription(subscription);
@@ -231,7 +232,7 @@ export default function Settings() {
                         Activer les notifications
                     </button>
                 </section>
-                
+
                 <section className="settings-section">
                     <button type="button" className="settings-logout" onClick={handleLogout}>
                         <LogOut size={18} />

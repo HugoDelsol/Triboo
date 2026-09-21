@@ -107,7 +107,7 @@ export default function CreateTask() {
             showToast(`${TYPE_LABELS[type]} créé${type === 'task' ? 'e' : ''}`, 'success');
             navigate('/');
         } catch (err) {
-            showToast("Une erreur est survenue", 'error');
+            showToast(err.message, 'error');
         }
     }
 
