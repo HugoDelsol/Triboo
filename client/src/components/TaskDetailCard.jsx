@@ -44,7 +44,7 @@ export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setIsMenuOpen(false);
-                                    onToggle(task.id, task.title);
+                                    onToggle(task.id, task.title, task.status);
                                 }}
                             >
                                 <CheckCircle size={14} /> {isDone ? 'Réouvrir' : 'Terminer'}

@@ -36,18 +36,22 @@ export default function Dashboard() {
             .finally(() => setIsLoading(false));
     }, []);
 
-    async function handleToggleTask(taskId, taskTitle) {
-        const confirmed = await confirm(`Marquer "${taskTitle}" comme faite ?`);
+    async function handleToggleTask(taskId, taskTitle, currentStatus) {
+        const isDone = currentStatus === 'done';
+        const confirmed = await confirm(isDone ? `Réouvrir "${taskTitle}" ?` : `Marquer "${taskTitle}" comme faite ?`);
         if (!confirmed) return;
 
+        const newStatus = isDone ? 'pending' : 'done';
+
         try {
-            await updateTaskStatus(taskId, 'done');
+            await updateTaskStatus(taskId, newStatus);
             setTasks((prev) =>
                 prev.map((task) =>
-                    task.id === taskId ? { ...task, status: 'done' } : task
+                    task.id === taskId ? { ...task, status: newStatus } : task
                 )
             );
-            showToast(`"${taskTitle}" marquée comme faite`, 'success');
+            closeTaskDetail();
+            showToast(isDone ? `"${taskTitle}" réouverte` : `"${taskTitle}" marquée comme faite`, 'success');
         } catch (err) {
             console.error(err);
             showToast('Impossible de mettre à jour la tâche', 'error');
@@ -74,7 +78,7 @@ export default function Dashboard() {
             closeTaskDetail();
             navigate(`/modifier/${taskId}`);
         } catch (error) {
-            console.log("dashboard", error);
+            showToast('Impossible de modifier la tâche', 'error');
         }
     }
 

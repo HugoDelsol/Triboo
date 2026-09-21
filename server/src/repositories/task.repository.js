@@ -4,7 +4,7 @@ import { pool } from '../config/database.js';
 export async function findAllTasks(householdId, profileId) {
     const [rows] = await pool.query(
         `SELECT t.*, c.name AS category_name, c.color AS category_color,
-            rt.recurrence_type, rt.recurrence_interval, p.name
+            rt.recurrence_type, rt.recurrence_interval, p.name AS name
      FROM tasks t
      LEFT JOIN categories c ON c.id = t.category_id
      LEFT JOIN recurring_task_templates rt ON rt.id = t.template_id
@@ -70,7 +70,7 @@ export async function updateTaskDetails(id, householdId, data) {
      WHERE id = ? AND household_id = ?`,
         [
             data.title,
-            data.description,           
+            data.description,
             data.category_id,
             data.due_date,
             data.due_time,
@@ -99,4 +99,21 @@ export async function findTaskTemplateId(id, householdId) {
         [id, householdId]
     );
     return rows[0]?.template_id ?? null;
+}
+
+export async function attachTemplateToTask(id, householdId, templateId, periodKey) {
+    const [result] = await pool.query(
+        `UPDATE tasks SET template_id = ?, period_key = ? WHERE id = ? AND household_id = ?`,
+        [templateId, periodKey, id, householdId]
+    );
+    return result.affectedRows > 0;
+}
+
+export async function updateRecurringTaskFields(id, householdId, data) {
+    const [result] = await pool.query(
+        `UPDATE tasks SET title = ?, description = ?, category_id = ?, priority = ?, is_shared = ?, wants_reminder = ?
+         WHERE id = ? AND household_id = ?`,
+        [data.title, data.description, data.category_id, data.priority, data.is_shared, data.wants_reminder, id, householdId]
+    );
+    return result.affectedRows > 0;
 }

@@ -20,7 +20,7 @@ export async function signup(req, res) {
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({ message: 'Ce nom de foyer est déjà pris' });
         }
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -74,7 +74,7 @@ export async function me(req, res) {
             profileName,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 

@@ -18,7 +18,8 @@ export async function fetchTaskById(taskId) {
         credentials: 'include'
     });
     if (!response.ok) {
-        throw new Error('Impossible de récupérer les tâches');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de récupérer les tâches');
     }
     return response.json();
 }
@@ -31,7 +32,8 @@ export async function createTask(taskData) {
         body: JSON.stringify(taskData),
     });
     if (!response.ok) {
-        throw new Error('Impossible de créer la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de créer la tâche');
     }
     return response.json();
 }
@@ -44,7 +46,8 @@ export async function createRecurringTask(taskData) {
         body: JSON.stringify(taskData),
     });
     if (!response.ok) {
-        throw new Error('Impossible de créer la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de créer la tâche');
     }
     return response.json();
 }
@@ -57,7 +60,8 @@ export async function editTask(data) {
         body: JSON.stringify(data),
     });
     if (!response.ok) {
-        throw new Error('Impossible de mettre à jour la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de mettre à jour la tâche');
     }
     return response.json();
 }
@@ -70,7 +74,8 @@ export async function editRecurringTask(data) {
         body: JSON.stringify(data),
     });
     if (!response.ok) {
-        throw new Error('Impossible de mettre à jour la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de mettre à jour la tâche');
     }
     return response.json();
 }
@@ -83,7 +88,8 @@ export async function updateTaskStatus(taskId, status) {
         body: JSON.stringify({ status }),
     });
     if (!response.ok) {
-        throw new Error('Impossible de mettre à jour la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de mettre à jour la tâche');
     }
     return response.json();
 }
@@ -94,7 +100,8 @@ export async function deleteTask(taskId) {
         credentials: 'include',
     });
     if (!response.ok) {
-        throw new Error('Impossible de supprimer la tâche');
+        const data = await response.json();
+        throw new Error(data.message ||'Impossible de supprimer la tâche');
     }
     return response.json();
 }

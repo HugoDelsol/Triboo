@@ -1,16 +1,23 @@
 // server/src/controllers/recurringTasks.controller.js
 import { insertTemplate, updateTemplateDetails } from '../repositories/recurringTemplate.repository.js';
-import { insertTask, findTaskTemplateId, updateTaskDetails } from '../repositories/task.repository.js';
+import {
+    insertTask,
+    findTaskById,
+    findTaskTemplateId,
+    attachTemplateToTask,
+    updateRecurringTaskFields,
+} from '../repositories/task.repository.js';
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
+
 
 export async function createRecurringTask(req, res) {
 
     const {
         title, description, category_id, due_date,
         recurrence_type, recurrence_interval, recurrence_day, recurrence_month,
-        wants_reminder, is_shared,
+        wants_reminder, is_shared, type,
     } = req.body;
 
     if (!title?.trim()) {
@@ -44,7 +51,7 @@ export async function createRecurringTask(req, res) {
             template_id: templateId,
             period_key: due_date,
             created_by_profile_id: req.session.profileId,
-            type: 'task',
+            type: type,
             title: title.trim(),
             description: description?.trim() || null,
             due_date,
@@ -73,18 +80,44 @@ export async function createRecurringTask(req, res) {
         res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
-
 export async function editTaskRecurring(req, res) {
     try {
-        const templateId = await findTaskTemplateId(req.params.id, req.householdId);
-        if (!templateId) return res.status(404).json({ message: 'Template introuvable' });
+        let templateId = await findTaskTemplateId(req.params.id, req.householdId);
 
-        const templateUpdated = await updateTemplateDetails(templateId, req.householdId, req.body);
-        if (!templateUpdated) return res.status(404).json({ message: 'Template introuvable' });
+        if (!templateId) {
+            const task = await findTaskById(req.params.id, req.householdId);
+            if (!task) return res.status(404).json({ message: 'Tâche introuvable' });
+            if (!task.due_date) {
+                return res.status(400).json({ message: "Cette tâche n'a pas de date, impossible de la rendre récurrente" });
+            }
 
-        const taskUpdated = await updateTaskDetails(req.params.id, req.householdId, {
-            ...req.body,
-            priority: "important",
+            templateId = await insertTemplate({
+                household_id: req.householdId,
+                category_id: req.body.category_id ?? null,
+                created_by_profile_id: req.session.profileId,
+                title: req.body.title.trim(),
+                description: req.body.description?.trim() || null,
+                recurrence_type: req.body.recurrence_type,
+                recurrence_interval: req.body.recurrence_interval ?? 1,
+                recurrence_day: req.body.recurrence_day,
+                recurrence_month: req.body.recurrence_month ?? null,
+                wants_reminder: req.body.wants_reminder ?? false,
+                last_generated_date: task.due_date,
+            });
+
+            await attachTemplateToTask(req.params.id, req.householdId, templateId, task.due_date);
+        } else {
+            const templateUpdated = await updateTemplateDetails(templateId, req.householdId, req.body);
+            if (!templateUpdated) return res.status(404).json({ message: 'Template introuvable' });
+        }
+
+        const taskUpdated = await updateRecurringTaskFields(req.params.id, req.householdId, {
+            title: req.body.title,
+            description: req.body.description ?? null,
+            category_id: req.body.category_id ?? null,
+            priority: 'important',
+            is_shared: req.body.is_shared ?? true,
+            wants_reminder: req.body.wants_reminder ?? false,
         });
         if (!taskUpdated) return res.status(404).json({ message: 'Tâche introuvable' });
 

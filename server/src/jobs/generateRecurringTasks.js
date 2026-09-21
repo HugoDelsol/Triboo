@@ -2,7 +2,10 @@
 import cron from 'node-cron';
 import { findAllTemplates, updateLastGeneratedDate } from '../repositories/recurringTemplate.repository.js';
 import { insertTask } from '../repositories/task.repository.js';
+import { insertReminder } from '../repositories/reminder.repository.js';
+import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { computeNextOccurrenceDate } from '../utils/recurrenceDates.js';
+import { buildReminderDates } from '../utils/reminderDates.js';
 
 function formatDate(date) {
     return date.toISOString().split('T')[0];
@@ -19,7 +22,7 @@ async function generateOccurrences() {
         while (nextDate <= today || !template.last_generated_date) {
             const periodKey = formatDate(nextDate);
 
-            await insertTask({
+            const taskId = await insertTask({
                 household_id: template.household_id,
                 category_id: template.category_id,
                 template_id: template.id,
@@ -35,6 +38,16 @@ async function generateOccurrences() {
                 is_shared: true,
                 wants_reminder: template.wants_reminder,
             });
+
+            const { dayOf, the24hBefore } = buildReminderDates(periodKey, null);
+            const targetProfileIds = (await findProfilesByHousehold(template.household_id)).map((p) => p.id);
+
+            for (const profileId of targetProfileIds) {
+                await insertReminder(taskId, profileId, dayOf);
+                if (template.wants_reminder) {
+                    await insertReminder(taskId, profileId, the24hBefore);
+                }
+            }
 
             await updateLastGeneratedDate(template.id, periodKey);
 

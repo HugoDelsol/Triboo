@@ -6,7 +6,7 @@ export async function getProfiles(req, res) {
         const profiles = await findProfilesByHousehold(req.session.householdId);
         res.json(profiles);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -20,7 +20,7 @@ export async function createProfile(req, res) {
         const id = await insertProfile(req.session.householdId, name.trim());
         res.status(201).json({ id, name: name.trim() });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 
@@ -36,7 +36,7 @@ export async function selectProfile(req, res) {
         req.session.profileId = profile.id;
         res.json({ profileId: profile.id, profileName: profile.name });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Une erreur est survenue, réessaie plus tard' });
     }
 }
 

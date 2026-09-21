@@ -86,7 +86,7 @@ export default function EditTask() {
                     title: trimmedTitle,
                     description: dataTask.description || null,
                     category_id: dataTask.category_id,
-                    due_date: dataTask.due_date.split('T').slice(0, 1),
+                    due_date: dataTask.due_date.split('T')[0].slice(0, 1),
                     recurrence_type: dataTask.recurrence_type,
                     recurrence_interval: dataTask.recurrence_interval,
                     recurrence_day: day,
@@ -101,7 +101,7 @@ export default function EditTask() {
                     title: trimmedTitle,
                     description: dataTask.description || null,
                     category_id: dataTask.category_id,
-                    due_date: dataTask.due_date?.split('T').slice(0, 1) || null,
+                    due_date: dataTask.due_date?.split('T')[0].slice(0, 1) || null,
                     due_time: dataTask.due_time || null,
                     location: dataTask.location || null,
                     priority: dataTask.priority,
@@ -115,7 +115,6 @@ export default function EditTask() {
             showToast(`${TYPE_LABELS[dataTask.type]} modifié${dataTask.type === 'task' ? 'e' : ''}`, 'success');
             navigate('/');
         } catch (err) {
-            console.log(err)
             showToast("Une erreur est survenue", 'error');
         }
     }

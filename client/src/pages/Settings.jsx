@@ -44,7 +44,6 @@ export default function Settings() {
             await saveSubscription(subscription);
             showToast('Notifications activées', 'success');
         } catch (err) {
-            console.log(err)
             showToast("Impossible d'activer les notifications", 'error');
         }
     }
