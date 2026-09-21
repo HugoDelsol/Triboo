@@ -9,6 +9,7 @@ import {
     updateListItem,
     deleteListItem as deleteListItemRepo,
 } from '../repositories/list.repository.js';
+import { findCategoryById } from '../repositories/category.repository.js';
 
 export async function getAllLists(req, res) {
     try {
@@ -35,8 +36,13 @@ export async function getListById(req, res) {
 
 export async function createList(req, res) {
     const { title, category_id } = req.body;
+
     if (!title?.trim()) {
         return res.status(400).json({ message: 'Le titre de la liste est requis' });
+    }
+    if (category_id) {
+        const category = await findCategoryById(category_id, req.householdId);
+        if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
     }
 
     try {

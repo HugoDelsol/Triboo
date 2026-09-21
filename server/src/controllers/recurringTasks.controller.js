@@ -10,6 +10,7 @@ import {
 import { insertReminder } from '../repositories/reminder.repository.js';
 import { findProfilesByHousehold } from '../repositories/profile.repository.js';
 import { buildReminderDates } from '../utils/reminderDates.js';
+import { findCategoryById } from '../repositories/category.repository.js';
 
 
 export async function createRecurringTask(req, res) {
@@ -28,6 +29,10 @@ export async function createRecurringTask(req, res) {
     }
     if (!['daily', 'weekly', 'monthly', 'yearly'].includes(recurrence_type)) {
         return res.status(400).json({ message: 'Type de récurrence invalide' });
+    }
+    if (category_id) {
+        const category = await findCategoryById(category_id, req.householdId);
+        if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
     }
 
     try {
@@ -81,6 +86,12 @@ export async function createRecurringTask(req, res) {
     }
 }
 export async function editTaskRecurring(req, res) {
+
+    if (req.body.category_id) {
+        const category = await findCategoryById(category_id, req.householdId);
+        if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
+    }
+
     try {
         let templateId = await findTaskTemplateId(req.params.id, req.householdId);
 
