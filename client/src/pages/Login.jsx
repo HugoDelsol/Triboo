@@ -20,7 +20,7 @@ export default function LoginPage() {
             await login(name, password);
             navigate('/select-profile');
         } catch (err) {
-            showToast(err.message, "error");
+            showToast("Une erreur est survenue, réessaie plus tard", 'error');
         }
     } return (
         <div className="login-page">

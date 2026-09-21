@@ -109,9 +109,6 @@ export default function EditTask() {
                     wants_reminder: dataTask.wants_reminder,
                 });
             }
-
-
-
             showToast(`${TYPE_LABELS[dataTask.type]} modifié${dataTask.type === 'task' ? 'e' : ''}`, 'success');
             navigate('/');
         } catch (err) {
