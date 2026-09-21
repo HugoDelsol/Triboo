@@ -1,6 +1,7 @@
 // server/src/index.js
 import './loadEnv.js';
 import express from 'express';
+import helmet from 'helmet';
 import cors from 'cors';
 
 import { startReminderCron } from './jobs/sendReminders.js';
@@ -17,6 +18,7 @@ import listsRouter from './routes/lists.routes.js';
 import pushRouter from './routes/push.routes.js';
 
 const app = express();
+app.use(helmet());
 app.use(cors({
     origin: process.env.CLIENT_URL,
     credentials: true, // indispensable pour que le cookie de session soit envoyé/reçu
