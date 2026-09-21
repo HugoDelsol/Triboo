@@ -20,7 +20,7 @@ const SORT_OPTIONS = [
     { value: 'priority', label: 'Priorité' },
 ];
 
-export default function FilterSheet({ filters, onChange, onClose }) {
+export default function FilterSheet({ filters, onChange, onClose, categories }) {
     function updateFilter(key, value) {
         onChange({ ...filters, [key]: value });
     }
@@ -64,6 +64,15 @@ export default function FilterSheet({ filters, onChange, onClose }) {
                         onClick={() => updateFilter('category', 'all')}
                         label="Toutes"
                     />
+                    {categories.map((cat) => (
+                        <FilterChip
+                            key={cat.id}
+                            active={filters.category === cat.name}
+                            onClick={() => updateFilter('category', cat.name)}
+                            label={cat.name}
+                            dotColor={cat.color}
+                        />
+                    ))}
                 </FilterGroup>
 
                 <FilterGroup label="Trier par">

@@ -10,6 +10,7 @@ import { useConfirm } from '../context/ConfirmContext';
 import { useToast } from '../context/ToastContext';
 import { useTaskDetail } from '../context/TaskDetailContext';
 import { fetchTasks, updateTaskStatus, deleteTask as apiDeleteTask } from '../api/tasks';
+import { fetchCategories } from '../api/categories';
 import './Notebook.css';
 
 const PRIORITY_ORDER = { urgent: 0, important: 1, faible: 2 };
@@ -24,12 +25,19 @@ export default function Tasks() {
     const [tasks, setTasks] = useState([]);
     const [isCreateOpen, setCreateOpen] = useState(false);
     const [isFilterOpen, setFilterOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
     const [filters, setFilters] = useState({
         type: 'all',       // 'all' | 'task' | 'memo' | 'appointment'
         category: 'all',   // 'all' | nom de catégorie
         status: 'pending', // 'all' | 'pending' | 'done'
         sortBy: 'date',    // 'date' | 'priority'
     });
+
+    useEffect(() => {
+        fetchCategories()
+            .then(setCategories)
+            .catch(() => showToast('Impossible de charger les catégories', 'error'));
+    }, []);
 
     useEffect(() => {
         fetchTasks()
@@ -128,6 +136,7 @@ export default function Tasks() {
 
             {isFilterOpen && (
                 <FilterSheet
+                    categories={categories}
                     filters={filters}
                     onChange={setFilters}
                     onClose={() => setFilterOpen(false)}

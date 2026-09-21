@@ -87,7 +87,9 @@ export async function createRecurringTask(req, res) {
 }
 export async function editTaskRecurring(req, res) {
 
-    if (req.body.category_id) {
+    const { category_id } = req.body;
+
+    if (category_id) {
         const category = await findCategoryById(category_id, req.householdId);
         if (!category) return res.status(400).json({ message: 'Catégorie invalide' });
     }
