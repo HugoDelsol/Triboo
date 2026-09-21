@@ -60,6 +60,7 @@ export default function Dashboard() {
 
         try {
             await apiDeleteTask(taskId);
+            closeTaskDetail();
             setTasks((prev) => prev.filter((task) => task.id !== taskId));
             showToast(`"${taskTitle}" supprimée`, 'success');
         } catch (error) {
@@ -70,10 +71,10 @@ export default function Dashboard() {
 
     async function editTask(taskId) {
         try {
-            closeTaskDetail()
+            closeTaskDetail();
             navigate(`/modifier/${taskId}`);
         } catch (error) {
-            console.log("dashboard", error)
+            console.log("dashboard", error);
         }
     }
 

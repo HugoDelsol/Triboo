@@ -16,6 +16,13 @@ export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
     const shortTime = task.due_time?.split(':').slice(0, 2).join(':');
     const menuRef = useRef(null);
 
+    const RECURRENCE_LABELS = {
+        daily: 'Tous les jours',
+        weekly: 'Toutes les semaines',
+        monthly: 'Tous les mois',
+        yearly: 'Tous les ans',
+    };
+
     useEffect(() => {
         if (!isMenuOpen) return;
 
@@ -40,7 +47,7 @@ export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
                 openTaskDetail(task, { onToggle, onEdit, onDelete });
             }}
         >
-            <div className="body" >
+            <div className="body">
                 <div className="title">{task.title}</div>
                 <div className="meta">
                     {task.category_id && (
@@ -52,13 +59,15 @@ export default function TaskCard({ task, onToggle, onEdit, onDelete }) {
                     {isOverdue && <span className="overdue-tag">Retard {daysLate} j</span>}
                     {!isOverdue && dateLabel && <span className="time-tag">{dateLabel}</span>}
                     {task.recurrence_type && (
-                        <span className="detail-info">
-                            <Repeat size={14} /> 
+                        <span className="recurrence-tag">
+                            {RECURRENCE_LABELS[task.recurrence_type]}
                         </span>
                     )}
                 </div>
+                {task.name && (
+                    <div className="created-by">Créé par {task.name}</div>
+                )}
             </div>
-
             <div className="card-menu-wrapper" ref={menuRef}>
                 <button
                     className="card-menu-trigger"

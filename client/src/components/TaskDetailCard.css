@@ -44,7 +44,7 @@
 .detail-header-text {
     display: flex;
     flex-direction: column;
-    gap: 4px;    
+    gap: 4px;
 }
 
 .detail-header-text .tag {
@@ -178,4 +178,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.created-by {
+    font-size: 11.5px;
+    color: var(--ink-faint);
 }

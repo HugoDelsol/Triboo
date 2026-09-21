@@ -28,9 +28,8 @@ export async function insertProfile(householdId, name, avatarUrl = null) {
 export async function countTasksAssignedToProfile(profileId, householdId) {
     const [rows] = await pool.query(
         `SELECT COUNT(*) AS count
-     FROM task_assignees ta
-     JOIN tasks t ON t.id = ta.task_id
-     WHERE ta.profile_id = ? AND t.household_id = ?`,
+     FROM tasks 
+     WHERE tasks.created_by_profile_id = ? AND tasks.household_id = ?`,
         [profileId, householdId]
     );
     return rows[0].count;

@@ -4,10 +4,11 @@ import { pool } from '../config/database.js';
 export async function findAllTasks(householdId, profileId) {
     const [rows] = await pool.query(
         `SELECT t.*, c.name AS category_name, c.color AS category_color,
-            rt.recurrence_type, rt.recurrence_interval
+            rt.recurrence_type, rt.recurrence_interval, p.name
      FROM tasks t
      LEFT JOIN categories c ON c.id = t.category_id
      LEFT JOIN recurring_task_templates rt ON rt.id = t.template_id
+     LEFT JOIN profiles p ON p.id = t.created_by_profile_id
      WHERE t.household_id = ?
        AND (t.is_shared = TRUE OR t.created_by_profile_id = ?)
      ORDER BY t.due_date ASC`,

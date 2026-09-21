@@ -5,7 +5,6 @@ import { useToast } from '../context/ToastContext';
 import { fetchCategories } from '../api/categories';
 import { fetchTaskById, editTask, editRecurringTask } from '../api/tasks';
 import { useParams, useNavigate } from 'react-router-dom';
-
 import './CreateTask.css';
 
 const TYPE_LABELS = {
@@ -40,14 +39,17 @@ export default function EditTask() {
     const [error, setError] = useState(null);
     const [dataTask, setDataTask] = useState({});
     const [categories, setCategories] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+    const [isLoadingTask, setIsLoadingTask] = useState(true);
     const [isRecurring, setIsRecurring] = useState(false);
+
+    const isLoading = isLoadingCategories || isLoadingTask;
 
     useEffect(() => {
         fetchCategories()
             .then(setCategories)
             .catch(() => setError('Une erreur est survenue, réessaie plus tard.'))
-            .finally(() => setIsLoading(false));
+            .finally(() => setIsLoadingCategories(false));
     }, []);
 
     useEffect(() => {
@@ -57,7 +59,7 @@ export default function EditTask() {
                 setIsRecurring(!!data.recurrence_interval);
             })
             .catch(() => setError('Une erreur est survenue, réessaie plus tard.'))
-            .finally(() => setIsLoading(false));
+            .finally(() => setIsLoadingTask(false));
     }, []);
 
     async function handleSubmit(e) {
@@ -99,7 +101,7 @@ export default function EditTask() {
                     title: trimmedTitle,
                     description: dataTask.description || null,
                     category_id: dataTask.category_id,
-                    due_date: dataTask.due_date.split('T').slice(0, 1),
+                    due_date: dataTask.due_date?.split('T').slice(0, 1) || null,
                     due_time: dataTask.due_time || null,
                     location: dataTask.location || null,
                     priority: dataTask.priority,
@@ -107,6 +109,7 @@ export default function EditTask() {
                     wants_reminder: dataTask.wants_reminder,
                 });
             }
+
 
 
             showToast(`${TYPE_LABELS[dataTask.type]} modifié${dataTask.type === 'task' ? 'e' : ''}`, 'success');

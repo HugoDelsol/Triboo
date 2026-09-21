@@ -51,7 +51,7 @@ export async function removeProfile(req, res) {
         const tasksCount = await countTasksAssignedToProfile(req.params.id, req.householdId);
         if (tasksCount > 0) {
             return res.status(409).json({
-                message: `Ce profil est assigné à ${tasksCount} tâche${tasksCount > 1 ? 's' : ''}, impossible de le supprimer`,
+                message: `Ce profil est assigné à ${tasksCount} élément${tasksCount > 1 ? 's' : ''}, impossible de le supprimer`,
             });
         }
 

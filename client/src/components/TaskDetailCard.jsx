@@ -96,22 +96,8 @@ export default function TaskDetailCard({ task, onToggle, onEdit, onDelete }) {
                 </div>
             )}
 
-            {task.assignees?.length > 0 && (
-                <div className="detail-row">
-                    <Users size={14} />
-                    {task.assignees.map((a) => a.name).join(', ')}
-                </div>
-            )}
-
-            {task.attachments?.length > 0 && (
-                <div className="detail-attachments">
-                    {task.attachments.map((file) => (
-                        <div key={file.id} className="attachment-chip">
-                            <Paperclip size={13} />
-                            {file.label}
-                        </div>
-                    ))}
-                </div>
+            {task.name && (
+                <p className="created-by">Créé par {task.name}</p>
             )}
         </div>
     );

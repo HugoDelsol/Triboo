@@ -34,6 +34,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 10px;
 }
 
 .card .meta {
@@ -150,4 +151,19 @@
 
 .card-menu-item.danger {
   color: var(--urgent);
+}
+
+.card .meta .recurrence-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+
+.card .created-by {
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
 }
