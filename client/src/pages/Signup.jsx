@@ -27,7 +27,7 @@ export default function SignupPage() {
             await signup(name, password);
             navigate('/select-profile');
         } catch (err) {
-            showToast('Ce nom de foyer est déjà pris', 'error');
+            showToast(err.message, 'error');
         }
     }
 
