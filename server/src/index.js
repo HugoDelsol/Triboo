@@ -18,6 +18,8 @@ import listsRouter from './routes/lists.routes.js';
 import pushRouter from './routes/push.routes.js';
 
 const app = express();
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({
     origin: process.env.CLIENT_URL,
@@ -25,7 +27,6 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(sessionMiddleware);
-
 app.use('/api/tasks', requireAuth, tasksRouter);
 app.use('/api/households', householdRouter);
 app.use('/api/profiles', requireAuth, profilesRouter);
