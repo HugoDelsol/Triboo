@@ -7,7 +7,6 @@ import { sendPushNotification } from '../utils/sendPush.js';
 async function processReminders() {
     const reminders = await findPendingReminders();
 
-
     for (const reminder of reminders) {
         const subscriptions = await findSubscriptionsByProfileId(reminder.profile_id);
 

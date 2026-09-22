@@ -1,6 +1,6 @@
 // src/pages/EditTask.jsx
 import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { fetchCategories } from '../api/categories';
 import { fetchTaskById, editTask, editRecurringTask } from '../api/tasks';
@@ -147,12 +147,17 @@ export default function EditTask() {
                     />
 
                     {(dataTask.type === "task" || dataTask.type === 'appointment') && (
-                        <input
-                            type="date"
-                            className="add-item-input"
-                            value={dataTask.due_date?.slice(0, 10) ?? ''}
-                            onChange={(e) => setDataTask(prev => ({ ...prev, due_date: e.target.value }))}
-                        />
+                        <>
+                            <div className="field-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Calendar size={12} /> Date
+                            </div>
+                            <input
+                                type="date"
+                                className="add-item-input"
+                                value={dataTask.due_date?.slice(0, 10) ?? ''}
+                                onChange={(e) => setDataTask(prev => ({ ...prev, due_date: e.target.value }))}
+                            />
+                        </>
                     )}
 
                     {dataTask.type === 'appointment' && (

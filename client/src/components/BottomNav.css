@@ -27,3 +27,12 @@ nav {
 .nav-item.active {
     color: var(--gold);
 }
+
+.nav-item:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.nav-item:focus-visible {
+    outline: 2px solid var(--important);
+    outline-offset: 2px;
+}

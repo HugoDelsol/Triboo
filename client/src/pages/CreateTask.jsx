@@ -1,6 +1,6 @@
 // src/pages/CreateTask.jsx
 import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 import { fetchCategories } from '../api/categories';
 import { createTask as apiCreateTask, createRecurringTask as apiCreateRecurringTask } from '../api/tasks';
@@ -76,7 +76,7 @@ export default function CreateTask() {
             if (isRecurring) {
                 const [, month, day] = dueDate.split('-').map(Number);
 
-                
+
                 await apiCreateRecurringTask({
                     title: trimmedTitle,
                     description: description.trim() || null,
@@ -142,12 +142,17 @@ export default function CreateTask() {
                     />
 
                     {isDateRequired && (
-                        <input
-                            type="date"
-                            className="add-item-input"
-                            value={dueDate}
-                            onChange={(e) => setDueDate(e.target.value)}
-                        />
+                        <>
+                            <div className="field-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Calendar size={12} /> Date
+                            </div>
+                            <input
+                                type="date"
+                                className="add-item-input"
+                                value={dueDate}
+                                onChange={(e) => setDueDate(e.target.value)}
+                            />
+                        </>
                     )}
 
                     {type === 'appointment' && (

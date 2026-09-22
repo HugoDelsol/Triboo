@@ -8,17 +8,15 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Tâches Famille',
-        short_name: 'Tâches',
+        name: 'Triboo',
+        short_name: 'Triboo',
         description: 'Gestion des tâches, mémos, rendez-vous et courses du foyer',
-        theme_color: '#2F5D50',
-        background_color: '#EFEDE4',
+        theme_color: '#E8B23D50',
+        background_color: '#121110',
         display: 'standalone',
         start_url: '/',
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'pwa-maskable-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: 'notes.png', sizes: '512x512', type: 'image/png' },
         ]
       }
     })
