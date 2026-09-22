@@ -11,7 +11,7 @@ export default defineConfig({
         name: 'Triboo',
         short_name: 'Triboo',
         description: 'Gestion des tâches, mémos, rendez-vous et courses du foyer',
-        theme_color: '#E8B23D50',
+        theme_color: '#121110',
         background_color: '#121110',
         display: 'standalone',
         start_url: '/',
