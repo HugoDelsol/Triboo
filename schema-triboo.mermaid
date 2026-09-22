@@ -1,0 +1,145 @@
+erDiagram
+    HOUSEHOLD ||--o{ PROFILES : "a"
+    HOUSEHOLD ||--o{ CATEGORIES : "a"
+    HOUSEHOLD ||--o{ TASKS : "a"
+    HOUSEHOLD ||--o{ LISTS : "a"
+    HOUSEHOLD ||--o{ RECURRING_TASK_TEMPLATES : "a"
+    HOUSEHOLD ||--o{ EXPENSES : "a"
+
+    PROFILES ||--o{ TASKS : "cree"
+    PROFILES ||--o{ LISTS : "cree"
+    PROFILES ||--o{ RECURRING_TASK_TEMPLATES : "cree"
+    PROFILES ||--o{ REMINDERS : "recoit"
+    PROFILES ||--o{ PUSH_SUBSCRIPTIONS : "possede"
+    PROFILES ||--o{ ACTIVITY_LOG : "genere"
+    PROFILES ||--o{ EXPENSES : "paie"
+
+    CATEGORIES ||--o{ TASKS : "categorise"
+    CATEGORIES ||--o{ LISTS : "categorise"
+    CATEGORIES ||--o{ RECURRING_TASK_TEMPLATES : "categorise"
+    CATEGORIES ||--o{ EXPENSES : "categorise"
+
+    RECURRING_TASK_TEMPLATES ||--o{ TASKS : "genere des occurrences"
+
+    TASKS ||--o{ REMINDERS : "declenche"
+    TASKS ||--o{ ACTIVITY_LOG : "historise"
+
+    LISTS ||--o{ LIST_ITEMS : "contient"
+
+    HOUSEHOLD {
+        int id PK
+        varchar name UK
+        varchar password_hash
+        timestamp created_at
+    }
+
+    PROFILES {
+        int id PK
+        int household_id FK
+        varchar name
+        varchar avatar_url
+    }
+
+    CATEGORIES {
+        int id PK
+        int household_id FK
+        varchar name
+        varchar color
+    }
+
+    TASKS {
+        int id PK
+        int household_id FK
+        int category_id FK
+        int template_id FK
+        varchar period_key
+        int created_by_profile_id FK
+        enum type "task, memo, appointment"
+        varchar title
+        text description
+        date due_date
+        time due_time
+        varchar location
+        enum priority "urgent, important, faible"
+        enum status "pending, done"
+        tinyint overdue_notified
+        tinyint is_shared
+        tinyint wants_reminder
+        timestamp created_at
+    }
+
+    RECURRING_TASK_TEMPLATES {
+        int id PK
+        int household_id FK
+        int category_id FK
+        int created_by_profile_id FK
+        varchar title
+        text description
+        enum recurrence_type "daily, weekly, monthly, yearly"
+        int recurrence_interval
+        int recurrence_day
+        int recurrence_month
+        tinyint wants_reminder
+        date last_generated_date
+        timestamp created_at
+    }
+
+    REMINDERS {
+        int id PK
+        int task_id FK
+        int profile_id FK
+        datetime scheduled_at
+        datetime sent_at
+        enum status "pending, sent, failed"
+    }
+
+    PUSH_SUBSCRIPTIONS {
+        int id PK
+        int profile_id FK
+        varchar endpoint UK
+        varchar keys_p256dh
+        varchar keys_auth
+        timestamp created_at
+    }
+
+    LISTS {
+        int id PK
+        int household_id FK
+        int category_id FK
+        int created_by_profile_id FK
+        varchar title
+        timestamp created_at
+    }
+
+    LIST_ITEMS {
+        int id PK
+        int list_id FK
+        varchar label
+        tinyint is_checked
+        timestamp created_at
+    }
+
+    ACTIVITY_LOG {
+        int id PK
+        int task_id FK
+        int profile_id FK
+        enum action "created, updated, done, undone"
+        timestamp created_at
+    }
+
+    EXPENSES {
+        int id PK
+        int household_id FK
+        int category_id FK
+        int paid_by_profile_id FK
+        decimal amount
+        varchar description
+        date expense_date
+        timestamp created_at
+    }
+
+    SESSIONS {
+        varchar session_id PK
+        int expires
+        mediumtext data
+    }
