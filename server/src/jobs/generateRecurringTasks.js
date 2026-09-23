@@ -60,5 +60,7 @@ async function generateOccurrences() {
 }
 
 export function startRecurringTaskCron() {
-    cron.schedule('0 6 * * *', generateOccurrences);
+    cron.schedule('0 6 * * *', generateOccurrences, {
+        timezone: 'Europe/Paris',
+    });
 }

@@ -40,5 +40,7 @@ async function processReminders() {
 }
 
 export function startReminderCron() {
-    cron.schedule('*/15 * * * *', processReminders);
+    cron.schedule('*/15 * * * *', processReminders, {
+        timezone:  'Europe/Paris',
+    });
 }
