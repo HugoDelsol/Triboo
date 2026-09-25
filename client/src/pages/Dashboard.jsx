@@ -14,9 +14,13 @@ import { useToast } from '../context/ToastContext';
 import { useConfirm } from '../context/ConfirmContext';
 import { useAuth } from '../context/AuthContext';
 import { useTaskDetail } from '../context/TaskDetailContext';
+import { saveSubscription } from '../api/push';
+import { urlBase64ToUint8Array } from '../utils/urlBase64ToUint8Array';
 import './Dashboard.css';
+import NotificationPrompt from '../components/NotificationPrompt';
 
 export default function Dashboard() {
+    const [showNotifPrompt, setShowNotifPrompt] = useState(false)
     const navigate = useNavigate();
     const { closeTaskDetail } = useTaskDetail();
     const { householdName, profileName } = useAuth();
@@ -35,6 +39,48 @@ export default function Dashboard() {
             })
             .finally(() => setIsLoading(false));
     }, []);
+
+const DISMISS_DAYS = 7;
+
+useEffect(() => {
+    if (Notification.permission === 'granted') return;
+
+    const dismissedUntil = localStorage.getItem('notifDate');
+    if (!dismissedUntil || new Date() > new Date(dismissedUntil)) {
+        setShowNotifPrompt(true);
+    }
+}, []);
+
+async function handleEnableNotifications() {
+    try {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+            setShowNotifPrompt(false);
+            showToast('Notifications refusées', 'error');
+            return;
+        }
+
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
+        });
+
+        await saveSubscription(subscription);
+        setShowNotifPrompt(false);
+        showToast('Notifications activées', 'success');
+    } catch (err) {
+        setShowNotifPrompt(false);
+        showToast("Impossible d'activer les notifications", 'error');
+    }
+}
+
+function handleDismissNotifPrompt() {
+    const nextPromptDate = new Date();
+    nextPromptDate.setDate(nextPromptDate.getDate() + DISMISS_DAYS);
+    localStorage.setItem('notifDate', nextPromptDate);
+    setShowNotifPrompt(false);
+}
 
     async function handleToggleTask(taskId, taskTitle, currentStatus) {
         const isDone = currentStatus === 'done';
@@ -89,6 +135,13 @@ export default function Dashboard() {
 
     return (
         <div className="content-scroll">
+
+            {showNotifPrompt && (
+                <NotificationPrompt
+                    onEnable={handleEnableNotifications}
+                    onDismiss={handleDismissNotifPrompt}
+                />
+            )}
             <div className="phone">
 
                 <header>

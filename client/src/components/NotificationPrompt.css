@@ -1,0 +1,53 @@
+.notification-prompt {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background-color: var(--card);
+    border-radius: 20px 20px 0 0;
+    padding: 28px 24px;
+    z-index: 100;
+    text-align: center;
+}
+
+.notification-prompt-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--bg);
+    color: var(--important);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.notification-prompt-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin: 0 0 8px;
+}
+
+.notification-prompt-text {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 20px;
+}
+
+.notification-prompt-later {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    padding: 12px;
+    margin-top: 8px;
+    cursor: pointer;
+}

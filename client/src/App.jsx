@@ -52,7 +52,6 @@ function App() {
           </BrowserRouter>
         </ConfirmProvider>
       </ToastProvider>
-
     </TaskDetailProvider>
   );
 }
