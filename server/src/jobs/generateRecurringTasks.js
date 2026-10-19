@@ -13,14 +13,28 @@ function formatDate(date) {
 
 async function generateOccurrences() {
     const templates = await findAllTemplates();
+
+    // Aujourd'hui à minuit, pour comparer des dates et non des heures
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     for (const template of templates) {
-        let nextDate = computeNextOccurrenceDate(template);
+        // Tant que la DERNIÈRE occurrence générée est dépassée (strictement avant
+        // aujourd'hui), on crée la suivante. Dès que la dernière générée est
+        // aujourd'hui ou dans le futur, la boucle s'arrête d'elle-même.
+        // Le "||" couvre un template qui n'a encore jamais rien généré.
+        // Cette condition est relue à chaque tour, car last_generated_date
+        // est mise à jour en fin de boucle.
+        while (!template.last_generated_date || new Date(template.last_generated_date) < today) {
+            const previousDate = template.last_generated_date;
 
-        while (nextDate <= today || !template.last_generated_date) {
+            // Date de la prochaine occurrence, calculée depuis la dernière générée
+            const nextDate = computeNextOccurrenceDate(template);
             const periodKey = formatDate(nextDate);
+
+            // Garde-fou : si la date n'avance pas (ex: recurrence_interval à 0),
+            // on sort, sinon la boucle ne s'arrêterait jamais.
+            if (previousDate && periodKey <= previousDate) break;
 
             const taskId = await insertTask({
                 household_id: template.household_id,
@@ -39,22 +53,20 @@ async function generateOccurrences() {
                 wants_reminder: template.wants_reminder,
             });
 
+            // Rappels : jour J pour tous, et 24h avant si demandé
             const { dayOf, the24hBefore } = buildReminderDates(periodKey, null);
-            const targetProfileIds = (await findProfilesByHousehold(template.household_id)).map((p) => p.id);
+            const profiles = await findProfilesByHousehold(template.household_id);
 
-            for (const profileId of targetProfileIds) {
-                await insertReminder(taskId, profileId, dayOf);
+            for (const profile of profiles) {
+                await insertReminder(taskId, profile.id, dayOf);
                 if (template.wants_reminder) {
-                    await insertReminder(taskId, profileId, the24hBefore);
+                    await insertReminder(taskId, profile.id, the24hBefore);
                 }
             }
 
+            // On avance le curseur : c'est ce qui fait évoluer la condition du while
             await updateLastGeneratedDate(template.id, periodKey);
-
             template.last_generated_date = periodKey;
-            nextDate = computeNextOccurrenceDate(template);
-
-            if (nextDate > today) break;
         }
     }
 }
